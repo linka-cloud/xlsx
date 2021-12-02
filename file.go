@@ -231,6 +231,12 @@ func (f *File) AppendSheet(sheet Sheet, sheetName string) (*Sheet, error) {
 }
 
 func (f *File) makeWorkbook() XLSXWorkbook {
+	definedNames := XLSXDefinedNames{}
+	for _, v := range f.DefinedNames {
+		if v != nil {
+			definedNames.DefinedName = append(definedNames.DefinedName, *v)
+		}
+	}
 	return XLSXWorkbook{
 		FileVersion: XLSXFileVersion{AppName: "Go XLSX"},
 		WorkbookPr:  XLSXWorkbookPr{ShowObjects: "all"},
@@ -255,6 +261,7 @@ func (f *File) makeWorkbook() XLSXWorkbook {
 			Iterate:      false,
 			IterateDelta: 0.001,
 		},
+		DefinedNames: definedNames,
 	}
 }
 
