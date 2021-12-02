@@ -56,20 +56,20 @@ const (
 
 // RichTextColor is the color of the RichTextRun.
 type RichTextColor struct {
-	coreColor xlsxColor
+	coreColor XLSXColor
 }
 
 // NewRichTextColorFromARGB creates a new RichTextColor from ARGB component values.
 // Each component must have a value in range of 0 to 255.
 func NewRichTextColorFromARGB(alpha, red, green, blue int) *RichTextColor {
 	argb := fmt.Sprintf("%02X%02X%02X%02X", alpha, red, green, blue)
-	return &RichTextColor{coreColor: xlsxColor{RGB: argb}}
+	return &RichTextColor{coreColor: XLSXColor{RGB: argb}}
 }
 
 // NewRichTextColorFromThemeColor creates a new RichTextColor from the theme color.
 // The argument `themeColor` is a zero-based index of the theme color.
 func NewRichTextColorFromThemeColor(themeColor int) *RichTextColor {
-	return &RichTextColor{coreColor: xlsxColor{Theme: &themeColor}}
+	return &RichTextColor{coreColor: XLSXColor{Theme: &themeColor}}
 }
 
 // RichTextFont is the font spec of the RichTextRun.
@@ -106,24 +106,24 @@ func (rt *RichTextRun) Equals(other *RichTextRun) bool {
 	return reflect.DeepEqual(rt, other)
 }
 
-func richTextToXml(r []RichTextRun) []xlsxR {
-	var xrs []xlsxR
+func richTextToXml(r []RichTextRun) []XLSXR {
+	var xrs []XLSXR
 	for _, rt := range r {
-		xr := xlsxR{}
-		xr.T = xlsxT{Text: rt.Text}
+		xr := XLSXR{}
+		xr.T = XLSXT{Text: rt.Text}
 		if rt.Font != nil {
-			rpr := xlsxRunProperties{}
+			rpr := XLSXRunProperties{}
 			if len(rt.Font.Name) > 0 {
-				rpr.RFont = &xlsxVal{Val: rt.Font.Name}
+				rpr.RFont = &XLSXVal{Val: rt.Font.Name}
 			}
 			if rt.Font.Size > 0.0 {
-				rpr.Sz = &xlsxFloatVal{Val: rt.Font.Size}
+				rpr.Sz = &XLSXFloatVal{Val: rt.Font.Size}
 			}
 			if rt.Font.Family != RichTextFontFamilyUnspecified {
-				rpr.Family = &xlsxIntVal{Val: int(rt.Font.Family)}
+				rpr.Family = &XLSXIntVal{Val: int(rt.Font.Family)}
 			}
 			if rt.Font.Charset != RichTextCharsetUnspecified {
-				rpr.Charset = &xlsxIntVal{Val: int(rt.Font.Charset)}
+				rpr.Charset = &XLSXIntVal{Val: int(rt.Font.Charset)}
 			}
 			if rt.Font.Color != nil {
 				xcolor := rt.Font.Color.coreColor
@@ -139,10 +139,10 @@ func richTextToXml(r []RichTextRun) []xlsxR {
 				rpr.Strike.Val = true
 			}
 			if len(rt.Font.VertAlign) > 0 {
-				rpr.VertAlign = &xlsxVal{Val: string(rt.Font.VertAlign)}
+				rpr.VertAlign = &XLSXVal{Val: string(rt.Font.VertAlign)}
 			}
 			if len(rt.Font.Underline) > 0 {
-				rpr.U = &xlsxVal{Val: string(rt.Font.Underline)}
+				rpr.U = &XLSXVal{Val: string(rt.Font.Underline)}
 			}
 			xr.RPr = &rpr
 		}
@@ -151,7 +151,7 @@ func richTextToXml(r []RichTextRun) []xlsxR {
 	return xrs
 }
 
-func xmlToRichText(r []xlsxR) []RichTextRun {
+func xmlToRichText(r []XLSXR) []RichTextRun {
 	richiText := []RichTextRun(nil)
 	for _, rr := range r {
 		rtr := RichTextRun{Text: rr.T.Text}

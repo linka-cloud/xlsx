@@ -11,9 +11,9 @@ type ContentTypesSuite struct{}
 var _ = Suite(&ContentTypesSuite{})
 
 func (l *ContentTypesSuite) TestMarshalContentTypes(c *C) {
-	var types xlsxTypes = xlsxTypes{}
-	types.Overrides = make([]xlsxOverride, 1)
-	types.Overrides[0] = xlsxOverride{PartName: "/_rels/.rels", ContentType: "application/vnd.openxmlformats-package.relationships+xml"}
+	var types XLSXTypes = XLSXTypes{}
+	types.Overrides = make([]XLSXOverride, 1)
+	types.Overrides[0] = XLSXOverride{PartName: "/_rels/.rels", ContentType: "application/vnd.openxmlformats-package.relationships+xml"}
 	output, err := xml.Marshal(types)
 	stringOutput := xml.Header + string(output)
 	c.Assert(err, IsNil)
@@ -23,7 +23,7 @@ func (l *ContentTypesSuite) TestMarshalContentTypes(c *C) {
 }
 
 func (l *ContentTypesSuite) TestMakeDefaultContentTypes(c *C) {
-	var types xlsxTypes = MakeDefaultContentTypes()
+	var types XLSXTypes = MakeDefaultContentTypes()
 	c.Assert(len(types.Overrides), Equals, 8)
 	c.Assert(types.Overrides[0].PartName, Equals, "/_rels/.rels")
 	c.Assert(types.Overrides[0].ContentType, Equals, "application/vnd.openxmlformats-package.relationships+xml")

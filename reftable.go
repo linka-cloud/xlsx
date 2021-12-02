@@ -21,11 +21,11 @@ func NewSharedStringRefTable() *RefTable {
 	return &rt
 }
 
-// MakeSharedStringRefTable takes an xlsxSST struct and converts
+// MakeSharedStringRefTable takes an XLSXSST struct and converts
 // it's contents to an slice of strings used to refer to string values
 // by numeric index - this is the model used within XLSX worksheet (a
 // numeric reference is stored to a shared cell value).
-func MakeSharedStringRefTable(source *xlsxSST) *RefTable {
+func MakeSharedStringRefTable(source *XLSXSST) *RefTable {
 	reftable := NewSharedStringRefTable()
 	reftable.isWrite = false
 	for _, si := range source.SI {
@@ -39,18 +39,18 @@ func MakeSharedStringRefTable(source *xlsxSST) *RefTable {
 	return reftable
 }
 
-// makeXlsxSST takes a RefTable and returns and
-// equivalent xlsxSST representation.
-func (rt *RefTable) makeXLSXSST() xlsxSST {
-	sst := xlsxSST{}
+// makeXLSXSST takes a RefTable and returns and
+// equivalent XLSXSST representation.
+func (rt *RefTable) makeXLSXSST() XLSXSST {
+	sst := XLSXSST{}
 	sst.Count = len(rt.indexedStrings)
 	sst.UniqueCount = sst.Count
 	for _, ref := range rt.indexedStrings {
-		si := xlsxSI{}
+		si := XLSXSI{}
 		if ref.isRichText {
 			si.R = richTextToXml(ref.richText)
 		} else {
-			si.T = &xlsxT{Text: ref.plainText}
+			si.T = &XLSXT{Text: ref.plainText}
 		}
 		sst.SI = append(sst.SI, si)
 	}

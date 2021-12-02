@@ -4,26 +4,26 @@ import (
 	"encoding/xml"
 )
 
-type xlsxTypes struct {
+type XLSXTypes struct {
 	XMLName xml.Name `xml:"http://schemas.openxmlformats.org/package/2006/content-types Types"`
 
-	Overrides []xlsxOverride `xml:"Override"`
-	Defaults  []xlsxDefault  `xml:"Default"`
+	Overrides []XLSXOverride `xml:"Override"`
+	Defaults  []XLSXDefault  `xml:"Default"`
 }
 
-type xlsxOverride struct {
+type XLSXOverride struct {
 	PartName    string `xml:",attr"`
 	ContentType string `xml:",attr"`
 }
 
-type xlsxDefault struct {
+type XLSXDefault struct {
 	Extension   string `xml:",attr"`
 	ContentType string `xml:",attr"`
 }
 
-func MakeDefaultContentTypes() (types xlsxTypes) {
-	types.Overrides = make([]xlsxOverride, 8)
-	types.Defaults = make([]xlsxDefault, 2)
+func MakeDefaultContentTypes() (types XLSXTypes) {
+	types.Overrides = make([]XLSXOverride, 8)
+	types.Defaults = make([]XLSXDefault, 2)
 
 	types.Overrides[0].PartName = "/_rels/.rels"
 	types.Overrides[0].ContentType = "application/vnd.openxmlformats-package.relationships+xml"

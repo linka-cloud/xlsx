@@ -12,7 +12,7 @@ type WorkbookSuite struct{}
 var _ = Suite(&WorkbookSuite{})
 
 // Test we can succesfully unmarshal the workbook.xml file from within
-// an XLSX file and return a xlsxWorkbook struct (and associated
+// an XLSX file and return a XLSXWorkbook struct (and associated
 // children).
 func (w *WorkbookSuite) TestUnmarshallWorkbookXML(c *C) {
 	var buf = bytes.NewBufferString(
@@ -53,8 +53,8 @@ func (w *WorkbookSuite) TestUnmarshallWorkbookXML(c *C) {
           </definedNames>
           <calcPr calcId="125725"/>
           </workbook>`)
-	var workbook *xlsxWorkbook
-	workbook = new(xlsxWorkbook)
+	var workbook *XLSXWorkbook
+	workbook = new(XLSXWorkbook)
 	err := xml.NewDecoder(buf).Decode(workbook)
 	c.Assert(err, IsNil)
 	c.Assert(workbook.FileVersion.AppName, Equals, "xl")
@@ -87,17 +87,17 @@ func (w *WorkbookSuite) TestUnmarshallWorkbookXML(c *C) {
 
 // Test we can marshall a Workbook to xml
 func (w *WorkbookSuite) TestMarshallWorkbook(c *C) {
-	var workbook *xlsxWorkbook
-	workbook = new(xlsxWorkbook)
-	workbook.FileVersion = xlsxFileVersion{}
+	var workbook *XLSXWorkbook
+	workbook = new(XLSXWorkbook)
+	workbook.FileVersion = XLSXFileVersion{}
 	workbook.FileVersion.AppName = "xlsx"
-	workbook.WorkbookPr = xlsxWorkbookPr{BackupFile: false}
-	workbook.BookViews = xlsxBookViews{}
-	workbook.BookViews.WorkBookView = make([]xlsxWorkBookView, 1)
-	workbook.BookViews.WorkBookView[0] = xlsxWorkBookView{}
-	workbook.Sheets = xlsxSheets{}
-	workbook.Sheets.Sheet = make([]xlsxSheet, 1)
-	workbook.Sheets.Sheet[0] = xlsxSheet{Name: "sheet1", SheetId: "1", Id: "rId2"}
+	workbook.WorkbookPr = XLSXWorkbookPr{BackupFile: false}
+	workbook.BookViews = XLSXBookViews{}
+	workbook.BookViews.WorkBookView = make([]XLSXWorkBookView, 1)
+	workbook.BookViews.WorkBookView[0] = XLSXWorkBookView{}
+	workbook.Sheets = XLSXSheets{}
+	workbook.Sheets.Sheet = make([]XLSXSheet, 1)
+	workbook.Sheets.Sheet[0] = XLSXSheet{Name: "sheet1", SheetId: "1", Id: "rId2"}
 
 	body, err := xml.Marshal(workbook)
 	c.Assert(err, IsNil)

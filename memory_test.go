@@ -70,7 +70,7 @@ func TestMemoryCellStore(t *testing.T) {
 			ApplyAlignment: true,
 		}
 
-		dv := &xlsxDataValidation{
+		dv := &XLSXDataValidation{
 			AllowBlank:       true,
 			ShowInputMessage: true,
 			ShowErrorMessage: true,

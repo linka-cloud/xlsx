@@ -90,7 +90,7 @@ const (
 
 // xlsx Indexed Colors
 // https://github.com/ClosedXML/ClosedXML/wiki/Excel-Indexed-Colors
-var xlsxIndexedColors = []string{
+var XLSXIndexedColors = []string{
 	"FF000000",
 	"FFFFFFFF",
 	"FFFF0000",
@@ -157,88 +157,88 @@ var xlsxIndexedColors = []string{
 	"FF333333",
 }
 
-// xlsxStyle directly maps the styleSheet element in the namespace
+// XLSXStyle directly maps the styleSheet element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxStyleSheet struct {
+type XLSXStyleSheet struct {
 	XMLName xml.Name `xml:"http://schemas.openxmlformats.org/spreadsheetml/2006/main styleSheet"`
 
-	Fonts        xlsxFonts         `xml:"fonts,omitempty"`
-	Fills        xlsxFills         `xml:"fills,omitempty"`
-	Borders      xlsxBorders       `xml:"borders,omitempty"`
-	Colors       *xlsxColors       `xml:"colors,omitempty"`
-	CellStyles   *xlsxCellStyles   `xml:"cellStyles,omitempty"`
-	CellStyleXfs *xlsxCellStyleXfs `xml:"cellStyleXfs,omitempty"`
-	CellXfs      xlsxCellXfs       `xml:"cellXfs,omitempty"`
-	NumFmts      *xlsxNumFmts      `xml:"numFmts,omitempty"`
-	DXfs         xlsxDXFs          `xml:"dxfs"`
+	Fonts        XLSXFonts         `xml:"fonts,omitempty"`
+	Fills        XLSXFills         `xml:"fills,omitempty"`
+	Borders      XLSXBorders       `xml:"borders,omitempty"`
+	Colors       *XLSXColors       `xml:"colors,omitempty"`
+	CellStyles   *XLSXCellStyles   `xml:"cellStyles,omitempty"`
+	CellStyleXfs *XLSXCellStyleXfs `xml:"cellStyleXfs,omitempty"`
+	CellXfs      XLSXCellXfs       `xml:"cellXfs,omitempty"`
+	NumFmts      *XLSXNumFmts      `xml:"numFmts,omitempty"`
+	DXfs         XLSXDXFs          `xml:"dxfs"`
 
 	theme *theme
 
 	styleCacheMU        sync.RWMutex
 	styleCache          map[int]*Style
 	numFmtRefTableMU    sync.RWMutex
-	numFmtRefTable      map[int]xlsxNumFmt
+	numFmtRefTable      map[int]XLSXNumFmt
 	parsedNumFmtTableMU sync.RWMutex
 	parsedNumFmtTable   map[string]*parsedNumberFormat
 }
 
-func newXlsxStyleSheet(t *theme) *xlsxStyleSheet {
-	return &xlsxStyleSheet{
+func newXLSXStyleSheet(t *theme) *XLSXStyleSheet {
+	return &XLSXStyleSheet{
 		theme:      t,
 		styleCache: make(map[int]*Style),
 	}
 }
 
-func (styles *xlsxStyleSheet) reset() {
-	styles.Fonts = xlsxFonts{}
-	styles.Fills = xlsxFills{}
-	styles.Borders = xlsxBorders{}
+func (styles *XLSXStyleSheet) reset() {
+	styles.Fonts = XLSXFonts{}
+	styles.Fills = XLSXFills{}
+	styles.Borders = XLSXBorders{}
 
 	// Microsoft seems to want Arial 11 defined by default.
 	styles.addFont(
-		xlsxFont{
-			Sz:     xlsxVal{"11"},
-			Family: xlsxVal{"2"},
-			Color:  xlsxColor{Theme: &defaultTheme},
-			Name:   xlsxVal{"Arial"},
-			Scheme: &xlsxVal{"minor"},
+		XLSXFont{
+			Sz:     XLSXVal{"11"},
+			Family: XLSXVal{"2"},
+			Color:  XLSXColor{Theme: &defaultTheme},
+			Name:   XLSXVal{"Arial"},
+			Scheme: &XLSXVal{"minor"},
 		},
 	)
 
-	styles.addFill(xlsxFill{PatternFill: xlsxPatternFill{PatternType: "none"}})
-	styles.addFill(xlsxFill{PatternFill: xlsxPatternFill{PatternType: "gray125"}})
+	styles.addFill(XLSXFill{PatternFill: XLSXPatternFill{PatternType: "none"}})
+	styles.addFill(XLSXFill{PatternFill: XLSXPatternFill{PatternType: "gray125"}})
 
 	// Microsoft seems to want an emtpy border to start with
 	styles.addBorder(
-		xlsxBorder{
-			Left:   xlsxLine{},
-			Right:  xlsxLine{},
-			Top:    xlsxLine{},
-			Bottom: xlsxLine{},
+		XLSXBorder{
+			Left:   XLSXLine{},
+			Right:  XLSXLine{},
+			Top:    XLSXLine{},
+			Bottom: XLSXLine{},
 		})
 
 	// add 0th CellStyleXf by default, as required by the standard
-	styles.CellStyleXfs = &xlsxCellStyleXfs{Count: 1, Xf: []xlsxXf{{}}}
+	styles.CellStyleXfs = &XLSXCellStyleXfs{Count: 1, Xf: []XLSXXf{{}}}
 
 	// add 0th CellXf by default, as required by the standard
-	styles.CellXfs = xlsxCellXfs{Count: 1, Xf: []xlsxXf{{}}}
-	styles.NumFmts = &xlsxNumFmts{}
+	styles.CellXfs = XLSXCellXfs{Count: 1, Xf: []XLSXXf{{}}}
+	styles.NumFmts = &XLSXNumFmts{}
 	styles.numFmtRefTableMU.Lock()
 	styles.numFmtRefTable = nil
 	styles.numFmtRefTableMU.Unlock()
 }
 
 //
-func (styles *xlsxStyleSheet) populateStyleFromXf(style *Style, xf xlsxXf) {
+func (styles *XLSXStyleSheet) populateStyleFromXf(style *Style, xf XLSXXf) {
 	style.ApplyBorder = xf.ApplyBorder
 	style.ApplyFill = xf.ApplyFill
 	style.ApplyFont = xf.ApplyFont
 	style.ApplyAlignment = xf.ApplyAlignment
 
 	if xf.BorderId > -1 && xf.BorderId < styles.Borders.Count {
-		var border xlsxBorder
+		var border XLSXBorder
 		border = styles.Borders.Border[xf.BorderId]
 		style.Border.Left = border.Left.Style
 		style.Border.LeftColor = border.Left.Color.RGB
@@ -296,7 +296,7 @@ func (styles *xlsxStyleSheet) populateStyleFromXf(style *Style, xf xlsxXf) {
 
 }
 
-func (styles *xlsxStyleSheet) getStyle(styleIndex int) *Style {
+func (styles *XLSXStyleSheet) getStyle(styleIndex int) *Style {
 	styles.styleCacheMU.RLock()
 	style, ok := styles.styleCache[styleIndex]
 	styles.styleCacheMU.RUnlock()
@@ -332,7 +332,7 @@ func (styles *xlsxStyleSheet) getStyle(styleIndex int) *Style {
 	return style
 }
 
-func (styles *xlsxStyleSheet) argbValue(color xlsxColor) string {
+func (styles *XLSXStyleSheet) argbValue(color XLSXColor) string {
 	if color.Theme != nil && styles.theme != nil {
 		return styles.theme.themeColor(int64(*color.Theme), color.Tint)
 	}
@@ -353,7 +353,7 @@ func getBuiltinNumberFormat(numFmtId int) string {
 	return nmfmt
 }
 
-func (styles *xlsxStyleSheet) getNumberFormat(styleIndex int) (string, *parsedNumberFormat) {
+func (styles *XLSXStyleSheet) getNumberFormat(styleIndex int) (string, *parsedNumberFormat) {
 	var numberFormat string = "general"
 	if styles.CellXfs.Xf != nil {
 		if styleIndex > -1 && styleIndex < styles.CellXfs.Count {
@@ -387,8 +387,8 @@ func (styles *xlsxStyleSheet) getNumberFormat(styleIndex int) (string, *parsedNu
 	return numberFormat, parsedFmt
 }
 
-func (styles *xlsxStyleSheet) addFont(xFont xlsxFont) (index int) {
-	var font xlsxFont
+func (styles *XLSXStyleSheet) addFont(xFont XLSXFont) (index int) {
+	var font XLSXFont
 	if xFont.Name.Val == "" {
 		return 0
 	}
@@ -403,8 +403,8 @@ func (styles *xlsxStyleSheet) addFont(xFont xlsxFont) (index int) {
 	return
 }
 
-func (styles *xlsxStyleSheet) addFill(xFill xlsxFill) (index int) {
-	var fill xlsxFill
+func (styles *XLSXStyleSheet) addFill(xFill XLSXFill) (index int) {
+	var fill XLSXFill
 	for index, fill = range styles.Fills.Fill {
 		if fill.Equals(xFill) {
 			return index
@@ -416,8 +416,8 @@ func (styles *xlsxStyleSheet) addFill(xFill xlsxFill) (index int) {
 	return
 }
 
-func (styles *xlsxStyleSheet) addBorder(xBorder xlsxBorder) (index int) {
-	var border xlsxBorder
+func (styles *XLSXStyleSheet) addBorder(xBorder XLSXBorder) (index int) {
+	var border XLSXBorder
 	for index, border = range styles.Borders.Border {
 		if border.Equals(xBorder) {
 			return index
@@ -430,10 +430,10 @@ func (styles *xlsxStyleSheet) addBorder(xBorder xlsxBorder) (index int) {
 	return
 }
 
-func (styles *xlsxStyleSheet) addCellStyleXf(xCellStyleXf xlsxXf) (index int) {
-	var cellStyleXf xlsxXf
+func (styles *XLSXStyleSheet) addCellStyleXf(xCellStyleXf XLSXXf) (index int) {
+	var cellStyleXf XLSXXf
 	if styles.CellStyleXfs == nil {
-		styles.CellStyleXfs = &xlsxCellStyleXfs{Count: 0}
+		styles.CellStyleXfs = &XLSXCellStyleXfs{Count: 0}
 	}
 	for index, cellStyleXf = range styles.CellStyleXfs.Xf {
 		if cellStyleXf.Equals(xCellStyleXf) {
@@ -446,8 +446,8 @@ func (styles *xlsxStyleSheet) addCellStyleXf(xCellStyleXf xlsxXf) (index int) {
 	return
 }
 
-func (styles *xlsxStyleSheet) addCellXf(xCellXf xlsxXf) (index int) {
-	var cellXf xlsxXf
+func (styles *XLSXStyleSheet) addCellXf(xCellXf XLSXXf) (index int) {
+	var cellXf XLSXXf
 	for index, cellXf = range styles.CellXfs.Xf {
 		if cellXf.Equals(xCellXf) {
 			return index
@@ -460,18 +460,18 @@ func (styles *xlsxStyleSheet) addCellXf(xCellXf xlsxXf) (index int) {
 	return
 }
 
-// newNumFmt generate a xlsxNumFmt according the format code. When the FormatCode is built in, it will return a xlsxNumFmt with the NumFmtId defined in ECMA document, otherwise it will generate a new NumFmtId greater than 164.
-func (styles *xlsxStyleSheet) newNumFmt(formatCode string) xlsxNumFmt {
+// newNumFmt generate a XLSXNumFmt according the format code. When the FormatCode is built in, it will return a XLSXNumFmt with the NumFmtId defined in ECMA document, otherwise it will generate a new NumFmtId greater than 164.
+func (styles *XLSXStyleSheet) newNumFmt(formatCode string) XLSXNumFmt {
 	if compareFormatString(formatCode, "general") {
-		return xlsxNumFmt{NumFmtId: 0, FormatCode: "general"}
+		return XLSXNumFmt{NumFmtId: 0, FormatCode: "general"}
 	}
 	// built in NumFmts in xmlStyle.go, traverse from the const.
 	numFmtId, ok := builtInNumFmtInv[formatCode]
 	if ok {
-		return xlsxNumFmt{NumFmtId: numFmtId, FormatCode: formatCode}
+		return XLSXNumFmt{NumFmtId: numFmtId, FormatCode: formatCode}
 	}
 
-	// find the exist xlsxNumFmt
+	// find the exist XLSXNumFmt
 	if styles.NumFmts != nil {
 		for _, numFmt := range styles.NumFmts.NumFmt {
 			if formatCode == numFmt.FormatCode {
@@ -492,15 +492,15 @@ func (styles *xlsxStyleSheet) newNumFmt(formatCode string) xlsxNumFmt {
 			numFmtId++
 		} else {
 			// addNumFmt contains locking code, so we don't lock around it.
-			styles.addNumFmt(xlsxNumFmt{NumFmtId: numFmtId, FormatCode: formatCode})
+			styles.addNumFmt(XLSXNumFmt{NumFmtId: numFmtId, FormatCode: formatCode})
 			break
 		}
 	}
-	return xlsxNumFmt{NumFmtId: numFmtId, FormatCode: formatCode}
+	return XLSXNumFmt{NumFmtId: numFmtId, FormatCode: formatCode}
 }
 
-// addNumFmt add xlsxNumFmt if its not exist.
-func (styles *xlsxStyleSheet) addNumFmt(xNumFmt xlsxNumFmt) {
+// addNumFmt add XLSXNumFmt if its not exist.
+func (styles *XLSXStyleSheet) addNumFmt(xNumFmt XLSXNumFmt) {
 	// don't add built in NumFmt
 	if xNumFmt.NumFmtId <= builtinNumFmtsCount {
 		return
@@ -511,11 +511,11 @@ func (styles *xlsxStyleSheet) addNumFmt(xNumFmt xlsxNumFmt) {
 	if !ok {
 		if styles.numFmtRefTable == nil {
 			styles.numFmtRefTableMU.Lock()
-			styles.numFmtRefTable = make(map[int]xlsxNumFmt)
+			styles.numFmtRefTable = make(map[int]XLSXNumFmt)
 			styles.numFmtRefTableMU.Unlock()
 		}
 		if styles.NumFmts == nil {
-			styles.NumFmts = &xlsxNumFmts{}
+			styles.NumFmts = &XLSXNumFmts{}
 		}
 		styles.NumFmts.NumFmt = append(styles.NumFmts.NumFmt, xNumFmt)
 		styles.numFmtRefTableMU.Lock()
@@ -525,7 +525,7 @@ func (styles *xlsxStyleSheet) addNumFmt(xNumFmt xlsxNumFmt) {
 	}
 }
 
-func (styles *xlsxStyleSheet) Marshal() (string, error) {
+func (styles *XLSXStyleSheet) Marshal() (string, error) {
 	result := xml.Header + `<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">`
 
 	if styles.NumFmts != nil {
@@ -581,20 +581,20 @@ func (styles *xlsxStyleSheet) Marshal() (string, error) {
 	return result + "</styleSheet>", nil
 }
 
-type xlsxDXFs struct {
+type XLSXDXFs struct {
 	Count int `xml:"count,attr"`
 }
 
-// xlsxNumFmts directly maps the numFmts element in the namespace
+// XLSXNumFmts directly maps the numFmts element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxNumFmts struct {
+type XLSXNumFmts struct {
 	Count  int          `xml:"count,attr"`
-	NumFmt []xlsxNumFmt `xml:"numFmt,omitempty"`
+	NumFmt []XLSXNumFmt `xml:"numFmt,omitempty"`
 }
 
-func (numFmts *xlsxNumFmts) Marshal() (result string, err error) {
+func (numFmts *XLSXNumFmts) Marshal() (result string, err error) {
 	if numFmts.Count > 0 {
 		result = fmt.Sprintf(`<numFmts count="%d">`, numFmts.Count)
 		for _, numFmt := range numFmts.NumFmt {
@@ -610,16 +610,16 @@ func (numFmts *xlsxNumFmts) Marshal() (result string, err error) {
 	return
 }
 
-// xlsxNumFmt directly maps the numFmt element in the namespace
+// XLSXNumFmt directly maps the numFmt element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxNumFmt struct {
+type XLSXNumFmt struct {
 	NumFmtId   int    `xml:"numFmtId,attr,omitempty"`
 	FormatCode string `xml:"formatCode,attr,omitempty"`
 }
 
-func (numFmt *xlsxNumFmt) Marshal() (result string, err error) {
+func (numFmt *XLSXNumFmt) Marshal() (result string, err error) {
 	formatCode := &bytes.Buffer{}
 	if err := xml.EscapeText(formatCode, []byte(numFmt.FormatCode)); err != nil {
 		return "", err
@@ -628,24 +628,24 @@ func (numFmt *xlsxNumFmt) Marshal() (result string, err error) {
 	return fmt.Sprintf(`<numFmt numFmtId="%d" formatCode="%s"/>`, numFmt.NumFmtId, formatCode), nil
 }
 
-// xlsxFonts directly maps the fonts element in the namespace
+// XLSXFonts directly maps the fonts element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxFonts struct {
+type XLSXFonts struct {
 	XMLName xml.Name `xml:"fonts"`
 
 	Count int        `xml:"count,attr"`
-	Font  []xlsxFont `xml:"font,omitempty"`
+	Font  []XLSXFont `xml:"font,omitempty"`
 }
 
 //
-func (fonts *xlsxFonts) addFont(font xlsxFont) {
+func (fonts *XLSXFonts) addFont(font XLSXFont) {
 	fonts.Font = append(fonts.Font, font)
 	fonts.Count++
 }
 
-func (fonts *xlsxFonts) Marshal(outputFontMap map[int]int) (result string, err error) {
+func (fonts *XLSXFonts) Marshal(outputFontMap map[int]int) (result string, err error) {
 	emittedCount := 0
 	subparts := ""
 
@@ -669,24 +669,24 @@ func (fonts *xlsxFonts) Marshal(outputFontMap map[int]int) (result string, err e
 	return
 }
 
-// xlsxFont directly maps the font element in the namespace
+// XLSXFont directly maps the font element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxFont struct {
-	Sz      xlsxVal   `xml:"sz,omitempty"`
-	Name    xlsxVal   `xml:"name,omitempty"`
-	Family  xlsxVal   `xml:"family,omitempty"`
-	Charset xlsxVal   `xml:"charset,omitempty"`
-	Color   xlsxColor `xml:"color,omitempty"`
-	B       *xlsxVal  `xml:"b,omitempty"`
-	I       *xlsxVal  `xml:"i,omitempty"`
-	U       *xlsxVal  `xml:"u,omitempty"`
-	Scheme  *xlsxVal  `xml:"scheme,omitempty"`
-	Strike  *xlsxVal  `xml:"strike,omitempty"`
+type XLSXFont struct {
+	Sz      XLSXVal   `xml:"sz,omitempty"`
+	Name    XLSXVal   `xml:"name,omitempty"`
+	Family  XLSXVal   `xml:"family,omitempty"`
+	Charset XLSXVal   `xml:"charset,omitempty"`
+	Color   XLSXColor `xml:"color,omitempty"`
+	B       *XLSXVal  `xml:"b,omitempty"`
+	I       *XLSXVal  `xml:"i,omitempty"`
+	U       *XLSXVal  `xml:"u,omitempty"`
+	Scheme  *XLSXVal  `xml:"scheme,omitempty"`
+	Strike  *XLSXVal  `xml:"strike,omitempty"`
 }
 
-func (font *xlsxFont) Equals(other xlsxFont) bool {
+func (font *XLSXFont) Equals(other XLSXFont) bool {
 	if (font.B == nil && other.B != nil) || (font.B != nil && other.B == nil) {
 		return false
 	}
@@ -699,7 +699,7 @@ func (font *xlsxFont) Equals(other xlsxFont) bool {
 	return font.Sz.Equals(other.Sz) && font.Name.Equals(other.Name) && font.Family.Equals(other.Family) && font.Charset.Equals(other.Charset) && font.Color.Equals(other.Color)
 }
 
-func (font *xlsxFont) Marshal() (result string, err error) {
+func (font *XLSXFont) Marshal() (result string, err error) {
 	result = "<font>"
 	if font.Sz.Val != "" {
 		result += fmt.Sprintf(`<sz val="%s"/>`, font.Sz.Val)
@@ -737,34 +737,34 @@ func (font *xlsxFont) Marshal() (result string, err error) {
 	return result + "</font>", nil
 }
 
-// xlsxVal directly maps the val element in the namespace
+// XLSXVal directly maps the val element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxVal struct {
+type XLSXVal struct {
 	Val string `xml:"val,attr,omitempty"`
 }
 
-func (val *xlsxVal) Equals(other xlsxVal) bool {
+func (val *XLSXVal) Equals(other XLSXVal) bool {
 	return val.Val == other.Val
 }
 
-// xlsxFills directly maps the fills element in the namespace
+// XLSXFills directly maps the fills element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxFills struct {
+type XLSXFills struct {
 	Count int        `xml:"count,attr"`
-	Fill  []xlsxFill `xml:"fill,omitempty"`
+	Fill  []XLSXFill `xml:"fill,omitempty"`
 }
 
 //
-func (fills *xlsxFills) addFill(fill xlsxFill) {
+func (fills *XLSXFills) addFill(fill XLSXFill) {
 	fills.Fill = append(fills.Fill, fill)
 	fills.Count++
 }
 
-func (fills *xlsxFills) Marshal(outputFillMap map[int]int) (string, error) {
+func (fills *XLSXFills) Marshal(outputFillMap map[int]int) (string, error) {
 	var subparts string
 	var emittedCount int
 	for i, fill := range fills.Fill {
@@ -787,19 +787,19 @@ func (fills *xlsxFills) Marshal(outputFillMap map[int]int) (string, error) {
 	return result, nil
 }
 
-// xlsxFill directly maps the fill element in the namespace
+// XLSXFill directly maps the fill element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxFill struct {
-	PatternFill xlsxPatternFill `xml:"patternFill,omitempty"`
+type XLSXFill struct {
+	PatternFill XLSXPatternFill `xml:"patternFill,omitempty"`
 }
 
-func (fill *xlsxFill) Equals(other xlsxFill) bool {
+func (fill *XLSXFill) Equals(other XLSXFill) bool {
 	return fill.PatternFill.Equals(other.PatternFill)
 }
 
-func (fill *xlsxFill) Marshal() (result string, err error) {
+func (fill *XLSXFill) Marshal() (result string, err error) {
 	if fill.PatternFill.PatternType != "" {
 		var xpatternFill string
 		result = `<fill>`
@@ -814,21 +814,21 @@ func (fill *xlsxFill) Marshal() (result string, err error) {
 	return
 }
 
-// xlsxPatternFill directly maps the patternFill element in the namespace
+// XLSXPatternFill directly maps the patternFill element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxPatternFill struct {
+type XLSXPatternFill struct {
 	PatternType string    `xml:"patternType,attr,omitempty"`
-	FgColor     xlsxColor `xml:"fgColor,omitempty"`
-	BgColor     xlsxColor `xml:"bgColor,omitempty"`
+	FgColor     XLSXColor `xml:"fgColor,omitempty"`
+	BgColor     XLSXColor `xml:"bgColor,omitempty"`
 }
 
-func (patternFill *xlsxPatternFill) Equals(other xlsxPatternFill) bool {
+func (patternFill *XLSXPatternFill) Equals(other XLSXPatternFill) bool {
 	return patternFill.PatternType == other.PatternType && patternFill.FgColor.Equals(other.FgColor) && patternFill.BgColor.Equals(other.BgColor)
 }
 
-func (patternFill *xlsxPatternFill) Marshal() (result string, err error) {
+func (patternFill *XLSXPatternFill) Marshal() (result string, err error) {
 	result = fmt.Sprintf(`<patternFill patternType="%s"`, patternFill.PatternType)
 	ending := `/>`
 	terminator := ""
@@ -849,38 +849,38 @@ func (patternFill *xlsxPatternFill) Marshal() (result string, err error) {
 	return
 }
 
-// xlsxColor is a common mapping used for both the fgColor and bgColor
+// XLSXColor is a common mapping used for both the fgColor and bgColor
 // elements in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxColor struct {
+type XLSXColor struct {
 	RGB     string  `xml:"rgb,attr,omitempty"`
 	Theme   *int    `xml:"theme,attr,omitempty"`
 	Tint    float64 `xml:"tint,attr,omitempty"`
 	Indexed *int    `xml:"indexed,attr,omitempty"`
 }
 
-func (color *xlsxColor) Equals(other xlsxColor) bool {
+func (color *XLSXColor) Equals(other XLSXColor) bool {
 	return color.RGB == other.RGB
 }
 
-// xlsxBorders directly maps the borders element in the namespace
+// XLSXBorders directly maps the borders element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxBorders struct {
+type XLSXBorders struct {
 	Count  int          `xml:"count,attr"`
-	Border []xlsxBorder `xml:"border"`
+	Border []XLSXBorder `xml:"border"`
 }
 
 //
-func (borders *xlsxBorders) addBorder(border xlsxBorder) {
+func (borders *XLSXBorders) addBorder(border XLSXBorder) {
 	borders.Border = append(borders.Border, border)
 	borders.Count++
 }
 
-func (borders *xlsxBorders) Marshal(outputBorderMap map[int]int) (result string, err error) {
+func (borders *XLSXBorders) Marshal(outputBorderMap map[int]int) (result string, err error) {
 	result = ""
 	emittedCount := 0
 	subparts := ""
@@ -904,23 +904,23 @@ func (borders *xlsxBorders) Marshal(outputBorderMap map[int]int) (result string,
 	return
 }
 
-// xlsxBorder directly maps the border element in the namespace
+// XLSXBorder directly maps the border element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxBorder struct {
-	Left   xlsxLine `xml:"left,omitempty"`
-	Right  xlsxLine `xml:"right,omitempty"`
-	Top    xlsxLine `xml:"top,omitempty"`
-	Bottom xlsxLine `xml:"bottom,omitempty"`
+type XLSXBorder struct {
+	Left   XLSXLine `xml:"left,omitempty"`
+	Right  XLSXLine `xml:"right,omitempty"`
+	Top    XLSXLine `xml:"top,omitempty"`
+	Bottom XLSXLine `xml:"bottom,omitempty"`
 }
 
-func (border *xlsxBorder) Equals(other xlsxBorder) bool {
+func (border *XLSXBorder) Equals(other XLSXBorder) bool {
 	return border.Left.Equals(other.Left) && border.Right.Equals(other.Right) && border.Top.Equals(other.Top) && border.Bottom.Equals(other.Bottom)
 }
 
 //
-func (border *xlsxBorder) marshalBorderLine(line xlsxLine, name string) string {
+func (border *XLSXBorder) marshalBorderLine(line XLSXLine, name string) string {
 	if line.Style == "" {
 		return fmt.Sprintf("<%s/>", name)
 	}
@@ -936,7 +936,7 @@ func (border *xlsxBorder) marshalBorderLine(line xlsxLine, name string) string {
 // To get borders to work correctly in Excel, you have to always start with an
 // empty set of borders. There was logic in this function that would strip out
 // empty elements, but unfortunately that would cause the border to fail.
-func (border *xlsxBorder) Marshal() (result string, err error) {
+func (border *XLSXBorder) Marshal() (result string, err error) {
 	subparts := border.marshalBorderLine(border.Left, "left")
 	subparts += border.marshalBorderLine(border.Right, "right")
 	subparts += border.marshalBorderLine(border.Top, "top")
@@ -947,26 +947,26 @@ func (border *xlsxBorder) Marshal() (result string, err error) {
 	return
 }
 
-// xlsxLine directly maps the line style element in the namespace
+// XLSXLine directly maps the line style element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxLine struct {
+type XLSXLine struct {
 	Style string    `xml:"style,attr,omitempty"`
-	Color xlsxColor `xml:"color,omitempty"`
+	Color XLSXColor `xml:"color,omitempty"`
 }
 
-func (line *xlsxLine) Equals(other xlsxLine) bool {
+func (line *XLSXLine) Equals(other XLSXLine) bool {
 	return line.Style == other.Style && line.Color.Equals(other.Color)
 }
 
-type xlsxCellStyles struct {
+type XLSXCellStyles struct {
 	XMLName   xml.Name        `xml:"cellStyles"`
 	Count     int             `xml:"count,attr"`
-	CellStyle []xlsxCellStyle `xml:"cellStyle,omitempty"`
+	CellStyle []XLSXCellStyle `xml:"cellStyle,omitempty"`
 }
 
-func (cellStyles *xlsxCellStyles) Marshal(maxXfId int) (result string, err error) {
+func (cellStyles *XLSXCellStyles) Marshal(maxXfId int) (result string, err error) {
 	stylesCount := 0
 	for _, cellStyle := range cellStyles.CellStyle {
 		if cellStyle.XfId <= maxXfId {
@@ -993,7 +993,7 @@ func (cellStyles *xlsxCellStyles) Marshal(maxXfId int) (result string, err error
 
 }
 
-type xlsxCellStyle struct {
+type XLSXCellStyle struct {
 	XMLName       xml.Name `xml:"cellStyle"`
 	BuiltInId     *int     `xml:"builtInId,attr,omitempty"`
 	CustomBuiltIn *bool    `xml:"customBuiltIn,attr,omitempty"`
@@ -1003,22 +1003,22 @@ type xlsxCellStyle struct {
 	XfId          int      `xml:"xfId,attr"`
 }
 
-// xlsxCellStyleXfs directly maps the cellStyleXfs element in the
+// XLSXCellStyleXfs directly maps the cellStyleXfs element in the
 // namespace http://schemas.openxmlformats.org/spreadsheetml/2006/main
 // - currently I have not checked it for completeness - it does as
 // much as I need.
-type xlsxCellStyleXfs struct {
+type XLSXCellStyleXfs struct {
 	Count int      `xml:"count,attr"`
-	Xf    []xlsxXf `xml:"xf,omitempty"`
+	Xf    []XLSXXf `xml:"xf,omitempty"`
 }
 
 //
-func (cellStyleXfs *xlsxCellStyleXfs) addXf(Xf xlsxXf) {
+func (cellStyleXfs *XLSXCellStyleXfs) addXf(Xf XLSXXf) {
 	cellStyleXfs.Xf = append(cellStyleXfs.Xf, Xf)
 	cellStyleXfs.Count++
 }
 
-func (cellStyleXfs *xlsxCellStyleXfs) Marshal(outputBorderMap, outputFillMap, outputFontMap map[int]int) (result string, err error) {
+func (cellStyleXfs *XLSXCellStyleXfs) Marshal(outputBorderMap, outputFillMap, outputFontMap map[int]int) (result string, err error) {
 	if cellStyleXfs.Count > 0 {
 		result = fmt.Sprintf(`<cellStyleXfs count="%d">`, cellStyleXfs.Count)
 		for _, xf := range cellStyleXfs.Xf {
@@ -1034,21 +1034,21 @@ func (cellStyleXfs *xlsxCellStyleXfs) Marshal(outputBorderMap, outputFillMap, ou
 	return
 }
 
-// xlsxCellXfs directly maps the cellXfs element in the namespace
+// XLSXCellXfs directly maps the cellXfs element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxCellXfs struct {
+type XLSXCellXfs struct {
 	Count int      `xml:"count,attr"`
-	Xf    []xlsxXf `xml:"xf,omitempty"`
+	Xf    []XLSXXf `xml:"xf,omitempty"`
 }
 
-func (cellXfs *xlsxCellXfs) addXf(Xf xlsxXf) {
+func (cellXfs *XLSXCellXfs) addXf(Xf XLSXXf) {
 	cellXfs.Xf = append(cellXfs.Xf, Xf)
 	cellXfs.Count++
 }
 
-func (cellXfs *xlsxCellXfs) Marshal(outputBorderMap, outputFillMap, outputFontMap map[int]int) (result string, err error) {
+func (cellXfs *XLSXCellXfs) Marshal(outputBorderMap, outputFillMap, outputFontMap map[int]int) (result string, err error) {
 	if cellXfs.Count > 0 {
 		result = fmt.Sprintf(`<cellXfs count="%d">`, cellXfs.Count)
 		for _, xf := range cellXfs.Xf {
@@ -1064,11 +1064,11 @@ func (cellXfs *xlsxCellXfs) Marshal(outputBorderMap, outputFillMap, outputFontMa
 	return
 }
 
-// xlsxXf directly maps the xf element in the namespace
+// XLSXXf directly maps the xf element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxXf struct {
+type XLSXXf struct {
 	ApplyAlignment    bool          `xml:"applyAlignment,attr"`
 	ApplyBorder       bool          `xml:"applyBorder,attr"`
 	ApplyFont         bool          `xml:"applyFont,attr"`
@@ -1080,10 +1080,10 @@ type xlsxXf struct {
 	FontId            int           `xml:"fontId,attr"`
 	NumFmtId          int           `xml:"numFmtId,attr"`
 	XfId              *int          `xml:"xfId,attr,omitempty"`
-	Alignment         xlsxAlignment `xml:"alignment"`
+	Alignment         XLSXAlignment `xml:"alignment"`
 }
 
-func (xf *xlsxXf) Equals(other xlsxXf) bool {
+func (xf *XLSXXf) Equals(other XLSXXf) bool {
 	return xf.ApplyAlignment == other.ApplyAlignment &&
 		xf.ApplyBorder == other.ApplyBorder &&
 		xf.ApplyFont == other.ApplyFont &&
@@ -1099,7 +1099,7 @@ func (xf *xlsxXf) Equals(other xlsxXf) bool {
 		xf.Alignment.Equals(other.Alignment)
 }
 
-func (xf *xlsxXf) Marshal(outputBorderMap, outputFillMap, outputFontMap map[int]int) (result string, err error) {
+func (xf *XLSXXf) Marshal(outputBorderMap, outputFillMap, outputFontMap map[int]int) (result string, err error) {
 	result = fmt.Sprintf(`<xf applyAlignment="%b" applyBorder="%b" applyFont="%b" applyFill="%b" applyNumberFormat="%b" applyProtection="%b" borderId="%d" fillId="%d" fontId="%d" numFmtId="%d"`, bool2Int(xf.ApplyAlignment), bool2Int(xf.ApplyBorder), bool2Int(xf.ApplyFont), bool2Int(xf.ApplyFill), bool2Int(xf.ApplyNumberFormat), bool2Int(xf.ApplyProtection), outputBorderMap[xf.BorderId], outputFillMap[xf.FillId], outputFontMap[xf.FontId], xf.NumFmtId)
 	if xf.XfId != nil {
 		result += fmt.Sprintf(` xfId="%d"`, *xf.XfId)
@@ -1112,7 +1112,7 @@ func (xf *xlsxXf) Marshal(outputBorderMap, outputFillMap, outputFontMap map[int]
 	return result + xAlignment + "</xf>", nil
 }
 
-type xlsxAlignment struct {
+type XLSXAlignment struct {
 	Horizontal   string `xml:"horizontal,attr"`
 	Indent       int    `xml:"indent,attr"`
 	ShrinkToFit  bool   `xml:"shrinkToFit,attr"`
@@ -1121,7 +1121,7 @@ type xlsxAlignment struct {
 	WrapText     bool   `xml:"wrapText,attr"`
 }
 
-func (alignment *xlsxAlignment) Equals(other xlsxAlignment) bool {
+func (alignment *XLSXAlignment) Equals(other XLSXAlignment) bool {
 	return alignment.Horizontal == other.Horizontal &&
 		alignment.Indent == other.Indent &&
 		alignment.ShrinkToFit == other.ShrinkToFit &&
@@ -1130,7 +1130,7 @@ func (alignment *xlsxAlignment) Equals(other xlsxAlignment) bool {
 		alignment.WrapText == other.WrapText
 }
 
-func (alignment *xlsxAlignment) Marshal() (result string, err error) {
+func (alignment *XLSXAlignment) Marshal() (result string, err error) {
 	if alignment.Horizontal == "" {
 		alignment.Horizontal = "general"
 	}
@@ -1147,22 +1147,22 @@ func bool2Int(b bool) int {
 	return 0
 }
 
-type xlsxRgbColor struct {
+type XLSXRgbColor struct {
 	Rgb string `xml:"rgb,attr"`
 }
 
-type xlsxColors struct {
-	IndexedColors []xlsxRgbColor `xml:"indexedColors>rgbColor,omitempty"`
-	MruColors     []xlsxColor    `xml:"mruColors>color,omitempty"`
+type XLSXColors struct {
+	IndexedColors []XLSXRgbColor `xml:"indexedColors>rgbColor,omitempty"`
+	MruColors     []XLSXColor    `xml:"mruColors>color,omitempty"`
 }
 
-func (c *xlsxColors) indexedColor(index int) string {
+func (c *XLSXColors) indexedColor(index int) string {
 	if c.IndexedColors != nil {
 		return c.IndexedColors[index-1].Rgb
 	} else {
 	    	if index < 1 || index > 64 {
 	 		return ""
 	    	}
-		return xlsxIndexedColors[index-1]
+		return XLSXIndexedColors[index-1]
 	}
 }

@@ -182,7 +182,7 @@ func getMaxMinFromDimensionRef(ref string) (minx, miny, maxx, maxy int, err erro
 // calculateMaxMinFromWorkSheet works out the dimensions of a spreadsheet
 // that doesn't have a DimensionRef set.  The only case currently
 // known where this is true is with XLSX exported from Google Docs.
-func calculateMaxMinFromWorksheet(worksheet *xlsxWorksheet) (minx, miny, maxx, maxy int, err error) {
+func calculateMaxMinFromWorksheet(worksheet *XLSXWorksheet) (minx, miny, maxx, maxy int, err error) {
 	// Note, this method could be very slow for large spreadsheets.
 	var x, y int
 	var maxVal int
@@ -238,8 +238,8 @@ func makeRowFromSpan(spans string, sheet *Sheet) *Row {
 	return row
 }
 
-// makeRowFromRaw returns the Row representation of the xlsxRow.
-func makeRowFromRaw(rawrow xlsxRow, sheet *Sheet) *Row {
+// makeRowFromRaw returns the Row representation of the XLSXRow.
+func makeRowFromRaw(rawrow XLSXRow, sheet *Sheet) *Row {
 	var upper int
 
 	upper = -1
@@ -274,7 +274,7 @@ type sharedFormula struct {
 	formula string
 }
 
-func formulaForCell(rawcell xlsxC, sharedFormulas map[int]sharedFormula) string {
+func formulaForCell(rawcell XLSXC, sharedFormulas map[int]sharedFormula) string {
 	var res string
 
 	f := rawcell.F
@@ -394,7 +394,7 @@ func shiftCell(cellID string, dx, dy int) string {
 // fillCellData attempts to extract a valid value, usable in
 // CSV form from the raw cell value.  Note - this is not actually
 // general enough - we should support retaining tabs and newlines.
-func fillCellData(rawCell xlsxC, refTable *RefTable, sharedFormulas map[int]sharedFormula, cell *Cell) {
+func fillCellData(rawCell XLSXC, refTable *RefTable, sharedFormulas map[int]sharedFormula, cell *Cell) {
 	val := strings.Trim(rawCell.V, " \t\n\r")
 	cell.formula = formulaForCell(rawCell, sharedFormulas)
 	switch rawCell.T {
@@ -438,7 +438,7 @@ func fillCellData(rawCell xlsxC, refTable *RefTable, sharedFormulas map[int]shar
 }
 
 // fillCellDataFromInlineString attempts to get inline string data and put it into a Cell.
-func fillCellDataFromInlineString(rawcell xlsxC, cell *Cell) {
+func fillCellDataFromInlineString(rawcell XLSXC, cell *Cell) {
 	cell.Value = ""
 	cell.RichText = nil
 	if rawcell.Is != nil {
@@ -457,7 +457,7 @@ func fillCellDataFromInlineString(rawcell xlsxC, cell *Cell) {
 // rows from a XSLXWorksheet, populates them with Cells and resolves
 // the value references from the reference table and stores them in
 // the rows and columns.
-func readRowsFromSheet(Worksheet *xlsxWorksheet, file *File, sheet *Sheet, rowLimit int, linkTable hyperlinkTable) error {
+func readRowsFromSheet(Worksheet *XLSXWorksheet, file *File, sheet *Sheet, rowLimit int, linkTable hyperlinkTable) error {
 	var row *Row
 	var maxCol, maxRow, colCount, rowCount int
 	var reftable *RefTable
@@ -591,7 +591,7 @@ type indexedSheet struct {
 	Error error
 }
 
-func readSheetViews(xSheetViews xlsxSheetViews) []SheetView {
+func readSheetViews(xSheetViews XLSXSheetViews) []SheetView {
 	if xSheetViews.SheetView == nil || len(xSheetViews.SheetView) == 0 {
 		return nil
 	}
@@ -620,18 +620,18 @@ type coord struct {
 
 type hyperlinkTable map[coord]Hyperlink
 
-func makeHyperlinkTable(worksheet *xlsxWorksheet, fi *File, rsheet *xlsxSheet) (hyperlinkTable, error) {
+func makeHyperlinkTable(worksheet *XLSXWorksheet, fi *File, rsheet *XLSXSheet) (hyperlinkTable, error) {
 	wrap := func(err error) (hyperlinkTable, error) {
 		return nil, fmt.Errorf("makeHyperlinkTable: %w", err)
 	}
 
 	table := make(hyperlinkTable)
 
-	// Convert xlsxHyperlinks to Hyperlinks
+	// Convert XLSXHyperlinks to Hyperlinks
 	if worksheet.Hyperlinks != nil {
 
 		worksheetRelsFile, ok := fi.worksheetRels["sheet"+rsheet.SheetId]
-		worksheetRels := new(xlsxWorksheetRels)
+		worksheetRels := new(XLSXWorksheetRels)
 		if ok {
 			rc, err := worksheetRelsFile.Open()
 			if err != nil {
@@ -683,11 +683,11 @@ func makeHyperlinkTable(worksheet *xlsxWorksheet, fi *File, rsheet *xlsxSheet) (
 	return table, nil
 }
 
-// readSheetFromFile is the logic of converting a xlsxSheet struct
+// readSheetFromFile is the logic of converting a XLSXSheet struct
 // into a Sheet struct.  This work can be done in parallel and so
 // readSheetsFromZipFile will spawn an instance of this function per
 // sheet and get the results back on the provided channel.
-func readSheetFromFile(rsheet xlsxSheet, fi *File, sheetXMLMap map[string]string, rowLimit int, valueOnly bool) (sheet *Sheet, errRes error) {
+func readSheetFromFile(rsheet XLSXSheet, fi *File, sheetXMLMap map[string]string, rowLimit int, valueOnly bool) (sheet *Sheet, errRes error) {
 	defer func() {
 		if x := recover(); x != nil {
 			errRes = errors.New(fmt.Sprintf("%v\n%s\n", x, debug.Stack()))
@@ -744,7 +744,7 @@ func readSheetFromFile(rsheet xlsxSheet, fi *File, sheetXMLMap map[string]string
 // over the Worksheets defined in the XSLXWorkbook and loads them into
 // Sheet objects stored in the Sheets slice of a xlsx.File struct.
 func readSheetsFromZipFile(f *zip.File, file *File, sheetXMLMap map[string]string, rowLimit int, valueOnly bool) (map[string]*Sheet, []*Sheet, error) {
-	var workbook *xlsxWorkbook
+	var workbook *XLSXWorkbook
 	var err error
 	var rc io.ReadCloser
 	var decoder *xml.Decoder
@@ -754,7 +754,7 @@ func readSheetsFromZipFile(f *zip.File, file *File, sheetXMLMap map[string]strin
 		return nil, nil, fmt.Errorf("readSheetsFromZipFile: %w", err)
 	}
 
-	workbook = new(xlsxWorkbook)
+	workbook = new(XLSXWorkbook)
 	rc, err = f.Open()
 	if err != nil {
 		return wrap(fmt.Errorf("file.Open: %w", err))
@@ -772,7 +772,7 @@ func readSheetsFromZipFile(f *zip.File, file *File, sheetXMLMap map[string]strin
 
 	// Only try and read sheets that have corresponding files.
 	// Notably this excludes chartsheets don't right now
-	var workbookSheets []xlsxSheet
+	var workbookSheets []XLSXSheet
 	for _, sheet := range workbook.Sheets.Sheet {
 		if f := worksheetFileForSheet(sheet, file.worksheets, sheetXMLMap); f != nil {
 			workbookSheets = append(workbookSheets, sheet)
@@ -815,7 +815,7 @@ func readSheetsFromZipFile(f *zip.File, file *File, sheetXMLMap map[string]strin
 // extract a reference table from the sharedStrings.xml file within
 // the XLSX zip file.
 func readSharedStringsFromZipFile(f *zip.File) (*RefTable, error) {
-	var sst *xlsxSST
+	var sst *XLSXSST
 	var err error
 	var rc io.ReadCloser
 	var decoder *xml.Decoder
@@ -835,7 +835,7 @@ func readSharedStringsFromZipFile(f *zip.File) (*RefTable, error) {
 	if err != nil {
 		return wrap(err)
 	}
-	sst = new(xlsxSST)
+	sst = new(XLSXSST)
 	decoder = xml.NewDecoder(rc)
 	err = decoder.Decode(sst)
 	if err != nil {
@@ -848,13 +848,13 @@ func readSharedStringsFromZipFile(f *zip.File) (*RefTable, error) {
 // readStylesFromZipFile() is an internal helper function to
 // extract a style table from the style.xml file within
 // the XLSX zip file.
-func readStylesFromZipFile(f *zip.File, theme *theme) (*xlsxStyleSheet, error) {
-	var style *xlsxStyleSheet
+func readStylesFromZipFile(f *zip.File, theme *theme) (*XLSXStyleSheet, error) {
+	var style *XLSXStyleSheet
 	var err error
 	var rc io.ReadCloser
 	var decoder *xml.Decoder
 
-	wrap := func(err error) (*xlsxStyleSheet, error) {
+	wrap := func(err error) (*XLSXStyleSheet, error) {
 		return nil, fmt.Errorf("readStylesFromZipFile: %w", err)
 	}
 
@@ -862,7 +862,7 @@ func readStylesFromZipFile(f *zip.File, theme *theme) (*xlsxStyleSheet, error) {
 	if err != nil {
 		return wrap(err)
 	}
-	style = newXlsxStyleSheet(theme)
+	style = newXLSXStyleSheet(theme)
 	decoder = xml.NewDecoder(rc)
 	err = decoder.Decode(style)
 	if err != nil {
@@ -872,7 +872,7 @@ func readStylesFromZipFile(f *zip.File, theme *theme) (*xlsxStyleSheet, error) {
 	return style, nil
 }
 
-func buildNumFmtRefTable(style *xlsxStyleSheet) {
+func buildNumFmtRefTable(style *XLSXStyleSheet) {
 	if style.NumFmts != nil {
 		for _, numFmt := range style.NumFmts.NumFmt {
 			// We do this for the side effect of populating the NumFmtRefTable.
@@ -892,7 +892,7 @@ func readThemeFromZipFile(f *zip.File) (*theme, error) {
 		return wrap(err)
 	}
 
-	var themeXml xlsxTheme
+	var themeXml XLSXTheme
 	err = xml.NewDecoder(rc).Decode(&themeXml)
 	if err != nil {
 		return wrap(err)
@@ -903,16 +903,16 @@ func readThemeFromZipFile(f *zip.File) (*theme, error) {
 
 type WorkBookRels map[string]string
 
-func (w *WorkBookRels) MakeXLSXWorkbookRels() xlsxWorkbookRels {
+func (w *WorkBookRels) MakeXLSXWorkbookRels() XLSXWorkbookRels {
 	relCount := len(*w)
-	xWorkbookRels := xlsxWorkbookRels{}
-	xWorkbookRels.Relationships = make([]xlsxWorkbookRelation, relCount+3)
+	xWorkbookRels := XLSXWorkbookRels{}
+	xWorkbookRels.Relationships = make([]XLSXWorkbookRelation, relCount+3)
 	for k, v := range *w {
 		index, err := strconv.Atoi(k[3:])
 		if err != nil {
 			panic(err.Error())
 		}
-		xWorkbookRels.Relationships[index-1] = xlsxWorkbookRelation{
+		xWorkbookRels.Relationships[index-1] = XLSXWorkbookRelation{
 			Id:     k,
 			Target: v,
 			Type:   "http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet"}
@@ -920,21 +920,21 @@ func (w *WorkBookRels) MakeXLSXWorkbookRels() xlsxWorkbookRels {
 
 	relCount++
 	sheetId := fmt.Sprintf("rId%d", relCount)
-	xWorkbookRels.Relationships[relCount-1] = xlsxWorkbookRelation{
+	xWorkbookRels.Relationships[relCount-1] = XLSXWorkbookRelation{
 		Id:     sheetId,
 		Target: "sharedStrings.xml",
 		Type:   "http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings"}
 
 	relCount++
 	sheetId = fmt.Sprintf("rId%d", relCount)
-	xWorkbookRels.Relationships[relCount-1] = xlsxWorkbookRelation{
+	xWorkbookRels.Relationships[relCount-1] = XLSXWorkbookRelation{
 		Id:     sheetId,
 		Target: "theme/theme1.xml",
 		Type:   "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme"}
 
 	relCount++
 	sheetId = fmt.Sprintf("rId%d", relCount)
-	xWorkbookRels.Relationships[relCount-1] = xlsxWorkbookRelation{
+	xWorkbookRels.Relationships[relCount-1] = XLSXWorkbookRelation{
 		Id:     sheetId,
 		Target: "styles.xml",
 		Type:   "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles"}
@@ -948,7 +948,7 @@ func (w *WorkBookRels) MakeXLSXWorkbookRels() xlsxWorkbookRels {
 // reliably derefence the worksheets in the XLSX file.
 func readWorkbookRelationsFromZipFile(workbookRels *zip.File) (WorkBookRels, error) {
 	var sheetXMLMap WorkBookRels
-	var wbRelationships *xlsxWorkbookRels
+	var wbRelationships *XLSXWorkbookRels
 	var rc io.ReadCloser
 	var decoder *xml.Decoder
 	var err error
@@ -962,7 +962,7 @@ func readWorkbookRelationsFromZipFile(workbookRels *zip.File) (WorkBookRels, err
 		return wrap(err)
 	}
 	decoder = xml.NewDecoder(rc)
-	wbRelationships = new(xlsxWorkbookRels)
+	wbRelationships = new(XLSXWorkbookRels)
 	err = decoder.Decode(wbRelationships)
 	if err != nil {
 		return wrap(err)
@@ -999,7 +999,7 @@ func ReadZipReader(r *zip.Reader, options ...FileOption) (*File, error) {
 	var sheetXMLMap map[string]string
 	var sheetsByName map[string]*Sheet
 	var sheets []*Sheet
-	var style *xlsxStyleSheet
+	var style *XLSXStyleSheet
 	var styles *zip.File
 	var themeFile *zip.File
 	var v *zip.File

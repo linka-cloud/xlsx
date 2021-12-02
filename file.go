@@ -20,11 +20,11 @@ type File struct {
 	worksheetRels        map[string]*zip.File
 	referenceTable       *RefTable
 	Date1904             bool
-	styles               *xlsxStyleSheet
+	styles               *XLSXStyleSheet
 	Sheets               []*Sheet
 	Sheet                map[string]*Sheet
 	theme                *theme
-	DefinedNames         []*xlsxDefinedName
+	DefinedNames         []*XLSXDefinedName
 	cellStoreConstructor CellStoreConstructor
 	rowLimit             int
 	valueOnly            bool
@@ -58,7 +58,7 @@ func NewFile(options ...FileOption) *File {
 	f := &File{
 		Sheet:                make(map[string]*Sheet),
 		Sheets:               make([]*Sheet, 0),
-		DefinedNames:         make([]*xlsxDefinedName, 0),
+		DefinedNames:         make([]*XLSXDefinedName, 0),
 		rowLimit:             NoRowLimit,
 		cellStoreConstructor: NewMemoryCellStore,
 	}
@@ -230,12 +230,12 @@ func (f *File) AppendSheet(sheet Sheet, sheetName string) (*Sheet, error) {
 	return &sheet, nil
 }
 
-func (f *File) makeWorkbook() xlsxWorkbook {
-	return xlsxWorkbook{
-		FileVersion: xlsxFileVersion{AppName: "Go XLSX"},
-		WorkbookPr:  xlsxWorkbookPr{ShowObjects: "all"},
-		BookViews: xlsxBookViews{
-			WorkBookView: []xlsxWorkBookView{
+func (f *File) makeWorkbook() XLSXWorkbook {
+	return XLSXWorkbook{
+		FileVersion: XLSXFileVersion{AppName: "Go XLSX"},
+		WorkbookPr:  XLSXWorkbookPr{ShowObjects: "all"},
+		BookViews: XLSXBookViews{
+			WorkBookView: []XLSXWorkBookView{
 				{
 					ShowHorizontalScroll: true,
 					ShowSheetTabs:        true,
@@ -248,8 +248,8 @@ func (f *File) makeWorkbook() xlsxWorkbook {
 				},
 			},
 		},
-		Sheets: xlsxSheets{Sheet: make([]xlsxSheet, len(f.Sheets))},
-		CalcPr: xlsxCalcPr{
+		Sheets: XLSXSheets{Sheet: make([]XLSXSheet, len(f.Sheets))},
+		CalcPr: XLSXCalcPr{
 			IterateCount: 100,
 			RefMode:      "A1",
 			Iterate:      false,
@@ -295,8 +295,8 @@ func (f *File) MakeStreamParts() (map[string]string, error) {
 	refTable.isWrite = true
 	var workbookRels WorkBookRels = make(WorkBookRels)
 	var err error
-	var workbook xlsxWorkbook
-	var types xlsxTypes = MakeDefaultContentTypes()
+	var workbook XLSXWorkbook
+	var types XLSXTypes = MakeDefaultContentTypes()
 
 	marshal := func(thing interface{}) (string, error) {
 		body, err := xml.Marshal(thing)
@@ -311,7 +311,7 @@ func (f *File) MakeStreamParts() (map[string]string, error) {
 	sheetIndex := 1
 
 	if f.styles == nil {
-		f.styles = newXlsxStyleSheet(f.theme)
+		f.styles = newXLSXStyleSheet(f.theme)
 	}
 	f.styles.reset()
 	if len(f.Sheets) == 0 {
@@ -338,11 +338,11 @@ func (f *File) MakeStreamParts() (map[string]string, error) {
 		}
 		types.Overrides = append(
 			types.Overrides,
-			xlsxOverride{
+			XLSXOverride{
 				PartName:    "/" + partName,
 				ContentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"})
 		workbookRels[rId] = sheetPath
-		workbook.Sheets.Sheet[sheetIndex-1] = xlsxSheet{
+		workbook.Sheets.Sheet[sheetIndex-1] = XLSXSheet{
 			Name:    sheet.Name,
 			SheetId: sheetId,
 			Id:      rId,
@@ -412,8 +412,8 @@ func (f *File) MarshallParts(zipWriter *zip.Writer) error {
 	refTable.isWrite = true
 	var workbookRels WorkBookRels = make(WorkBookRels)
 	var err error
-	var workbook xlsxWorkbook
-	var types xlsxTypes = MakeDefaultContentTypes()
+	var workbook XLSXWorkbook
+	var types XLSXTypes = MakeDefaultContentTypes()
 
 	wrap := func(err error) error {
 		return fmt.Errorf("MarshallParts: %w", err)
@@ -444,7 +444,7 @@ func (f *File) MarshallParts(zipWriter *zip.Writer) error {
 	sheetIndex := 1
 
 	if f.styles == nil {
-		f.styles = newXlsxStyleSheet(f.theme)
+		f.styles = newXLSXStyleSheet(f.theme)
 	}
 	f.styles.reset()
 	if len(f.Sheets) == 0 {
@@ -468,11 +468,11 @@ func (f *File) MarshallParts(zipWriter *zip.Writer) error {
 		relPartName := fmt.Sprintf("xl/worksheets/_rels/sheet%d.xml.rels", sheetIndex)
 		types.Overrides = append(
 			types.Overrides,
-			xlsxOverride{
+			XLSXOverride{
 				PartName:    "/" + partName,
 				ContentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"})
 		workbookRels[rId] = sheetPath
-		workbook.Sheets.Sheet[sheetIndex-1] = xlsxSheet{
+		workbook.Sheets.Sheet[sheetIndex-1] = XLSXSheet{
 			Name:    sheet.Name,
 			SheetId: sheetId,
 			Id:      rId,

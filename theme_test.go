@@ -57,7 +57,7 @@ func (s *ThemeSuite) TestThemeColors(c *C) {
 </a:themeElements>
 </a:theme>
 	`)
-	var themeXml xlsxTheme
+	var themeXml XLSXTheme
 	err := xml.NewDecoder(themeXmlBytes).Decode(&themeXml)
 	c.Assert(err, IsNil)
 

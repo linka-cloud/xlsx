@@ -25,7 +25,7 @@ type Sheet struct {
 	SheetFormat     SheetFormat
 	AutoFilter      *AutoFilter
 	Relations       []Relation
-	DataValidations []*xlsxDataValidation
+	DataValidations []*XLSXDataValidation
 	cellStore       CellStore
 	currentRow      *Row
 }
@@ -95,10 +95,10 @@ type Relation struct {
 	TargetMode RelationshipTargetMode
 }
 
-func (s *Sheet) makeXLSXSheetRelations() *xlsxWorksheetRels {
-	relSheet := xlsxWorksheetRels{XMLName: xml.Name{Local: "Relationships"}, Relationships: []xlsxWorksheetRelation{}}
+func (s *Sheet) makeXLSXSheetRelations() *XLSXWorksheetRels {
+	relSheet := XLSXWorksheetRels{XMLName: xml.Name{Local: "Relationships"}, Relationships: []XLSXWorksheetRelation{}}
 	for id, rel := range s.Relations {
-		xRel := xlsxWorksheetRelation{Id: "rId" + strconv.Itoa(id+1), Type: rel.Type, Target: rel.Target, TargetMode: rel.TargetMode}
+		xRel := XLSXWorksheetRelation{Id: "rId" + strconv.Itoa(id+1), Type: rel.Type, Target: rel.Target, TargetMode: rel.TargetMode}
 		relSheet.Relationships = append(relSheet.Relationships, xRel)
 	}
 	if len(relSheet.Relationships) == 0 {
@@ -243,7 +243,7 @@ func (s *Sheet) AddRowAtIndex(index int) (*Row, error) {
 }
 
 // Add a DataValidation to a range of cells
-func (s *Sheet) AddDataValidation(dv *xlsxDataValidation) {
+func (s *Sheet) AddDataValidation(dv *XLSXDataValidation) {
 	s.mustBeOpen()
 	s.DataValidations = append(s.DataValidations, dv)
 }
@@ -495,10 +495,10 @@ func (s *Sheet) handleMerged() {
 	}
 }
 
-func (s *Sheet) makeSheetView(worksheet *xlsxWorksheet) {
+func (s *Sheet) makeSheetView(worksheet *XLSXWorksheet) {
 	for index, sheetView := range s.SheetViews {
 		if sheetView.Pane != nil {
-			worksheet.SheetViews.SheetView[index].Pane = &xlsxPane{
+			worksheet.SheetViews.SheetView[index].Pane = &XLSXPane{
 				XSplit:      sheetView.Pane.XSplit,
 				YSplit:      sheetView.Pane.YSplit,
 				TopLeftCell: sheetView.Pane.TopLeftCell,
@@ -514,7 +514,7 @@ func (s *Sheet) makeSheetView(worksheet *xlsxWorksheet) {
 
 }
 
-func (s *Sheet) makeSheetFormatPr(worksheet *xlsxWorksheet) {
+func (s *Sheet) makeSheetFormatPr(worksheet *XLSXWorksheet) {
 	if s.SheetFormat.DefaultRowHeight != 0 {
 		worksheet.SheetFormatPr.DefaultRowHeight = s.SheetFormat.DefaultRowHeight
 	}
@@ -522,7 +522,7 @@ func (s *Sheet) makeSheetFormatPr(worksheet *xlsxWorksheet) {
 }
 
 //
-func (s *Sheet) makeCols(worksheet *xlsxWorksheet, styles *xlsxStyleSheet) (maxLevelCol uint8) {
+func (s *Sheet) makeCols(worksheet *XLSXWorksheet, styles *XLSXStyleSheet) (maxLevelCol uint8) {
 	s.mustBeOpen()
 	maxLevelCol = 0
 	if s.Cols == nil {
@@ -550,10 +550,10 @@ func (s *Sheet) makeCols(worksheet *xlsxWorksheet, styles *xlsxStyleSheet) (maxL
 
 			// When the cols content is empty, the cols flag is not output in the xml file.
 			if worksheet.Cols == nil {
-				worksheet.Cols = &xlsxCols{Col: []xlsxCol{}}
+				worksheet.Cols = &XLSXCols{Col: []XLSXCol{}}
 			}
 			worksheet.Cols.Col = append(worksheet.Cols.Col,
-				xlsxCol{
+				XLSXCol{
 					Min:          col.Min,
 					Max:          col.Max,
 					Hidden:       col.Hidden,
@@ -578,7 +578,7 @@ func (s *Sheet) prepSheetForMarshalling(maxLevelCol uint8) {
 	s.SheetFormat.OutlineLevelCol = maxLevelCol
 }
 
-func (s *Sheet) prepWorksheetFromRows(worksheet *xlsxWorksheet, relations *xlsxWorksheetRels) error {
+func (s *Sheet) prepWorksheetFromRows(worksheet *XLSXWorksheet, relations *XLSXWorksheetRels) error {
 	s.mustBeOpen()
 	var maxCell, maxRow int
 
@@ -594,7 +594,7 @@ func (s *Sheet) prepWorksheetFromRows(worksheet *xlsxWorksheet, relations *xlsxW
 			cellID := GetCellIDStringFromCoords(cell.num, row.num)
 			if nil != cell.DataValidation {
 				if nil == worksheet.DataValidations {
-					worksheet.DataValidations = &xlsxDataValidations{}
+					worksheet.DataValidations = &XLSXDataValidations{}
 				}
 				cell.DataValidation.Sqref = cellID
 				worksheet.DataValidations.DataValidation = append(worksheet.DataValidations.DataValidation, cell.DataValidation)
@@ -603,7 +603,7 @@ func (s *Sheet) prepWorksheetFromRows(worksheet *xlsxWorksheet, relations *xlsxW
 
 			if cell.Hyperlink != (Hyperlink{}) {
 				if worksheet.Hyperlinks == nil {
-					worksheet.Hyperlinks = &xlsxHyperlinks{HyperLinks: []xlsxHyperlink{}}
+					worksheet.Hyperlinks = &XLSXHyperlinks{HyperLinks: []XLSXHyperlink{}}
 				}
 
 				var relId string
@@ -617,24 +617,24 @@ func (s *Sheet) prepWorksheetFromRows(worksheet *xlsxWorksheet, relations *xlsxW
 
 				if relId != "" {
 
-					xlsxLink := xlsxHyperlink{
+					XLSXLink := XLSXHyperlink{
 						RelationshipId: relId,
 						Reference:      cellID,
 						DisplayString:  cell.Hyperlink.DisplayString,
 						Tooltip:        cell.Hyperlink.Tooltip}
-					worksheet.Hyperlinks.HyperLinks = append(worksheet.Hyperlinks.HyperLinks, xlsxLink)
+					worksheet.Hyperlinks.HyperLinks = append(worksheet.Hyperlinks.HyperLinks, XLSXLink)
 				}
 			}
 
 			if cell.HMerge > 0 || cell.VMerge > 0 {
-				mc := xlsxMergeCell{}
+				mc := XLSXMergeCell{}
 				start := fmt.Sprintf("%s%d", ColIndexToLetters(cell.num), row.num+1)
 				endcol := cell.num + cell.HMerge
 				endrow := row.num + cell.VMerge + 1
 				end := fmt.Sprintf("%s%d", ColIndexToLetters(endcol), endrow)
 				mc.Ref = start + ":" + end
 				if worksheet.MergeCells == nil {
-					worksheet.MergeCells = &xlsxMergeCells{}
+					worksheet.MergeCells = &XLSXMergeCells{}
 				}
 				worksheet.MergeCells.Cells = append(worksheet.MergeCells.Cells, mc)
 				worksheet.MergeCells.addCell(mc)
@@ -656,10 +656,10 @@ func (s *Sheet) prepWorksheetFromRows(worksheet *xlsxWorksheet, relations *xlsxW
 	}
 
 	if s.AutoFilter != nil {
-		worksheet.AutoFilter = &xlsxAutoFilter{Ref: fmt.Sprintf("%v:%v", s.AutoFilter.TopLeftCell, s.AutoFilter.BottomRightCell)}
+		worksheet.AutoFilter = &XLSXAutoFilter{Ref: fmt.Sprintf("%v:%v", s.AutoFilter.TopLeftCell, s.AutoFilter.BottomRightCell)}
 	}
 
-	dimension := xlsxDimension{}
+	dimension := XLSXDimension{}
 	dimension.Ref = "A1:" + GetCellIDStringFromCoords(maxCell, maxRow)
 	if dimension.Ref == "A1:A1" {
 		dimension.Ref = "A1"
@@ -668,18 +668,18 @@ func (s *Sheet) prepWorksheetFromRows(worksheet *xlsxWorksheet, relations *xlsxW
 	return nil
 }
 
-func (s *Sheet) makeRows(worksheet *xlsxWorksheet, styles *xlsxStyleSheet, refTable *RefTable, relations *xlsxWorksheetRels, maxLevelCol uint8) error {
+func (s *Sheet) makeRows(worksheet *XLSXWorksheet, styles *XLSXStyleSheet, refTable *RefTable, relations *XLSXWorksheetRels, maxLevelCol uint8) error {
 	s.mustBeOpen()
 	maxRow := 0
 	maxCell := 0
 	var maxLevelRow uint8
-	xSheet := xlsxSheetData{}
+	xSheet := XLSXSheetData{}
 	makeR := func(row *Row) error {
 		r := row.num
 		if r > maxRow {
 			maxRow = r
 		}
-		xRow := xlsxRow{}
+		xRow := XLSXRow{}
 		xRow.R = r + 1
 		if row.customHeight {
 			xRow.CustomHeight = true
@@ -716,12 +716,12 @@ func (s *Sheet) makeRows(worksheet *xlsxWorksheet, styles *xlsxStyleSheet, refTa
 			if c > maxCell {
 				maxCell = c
 			}
-			xC := xlsxC{
+			xC := XLSXC{
 				S: XfId,
 				R: GetCellIDStringFromCoords(c, r),
 			}
 			if cell.formula != "" {
-				xC.F = &xlsxF{Content: cell.formula}
+				xC.F = &XLSXF{Content: cell.formula}
 			}
 			switch cell.cellType {
 			case CellTypeInline:
@@ -757,7 +757,7 @@ func (s *Sheet) makeRows(worksheet *xlsxWorksheet, styles *xlsxStyleSheet, refTa
 			xRow.C = append(xRow.C, xC)
 			if nil != cell.DataValidation {
 				if nil == worksheet.DataValidations {
-					worksheet.DataValidations = &xlsxDataValidations{}
+					worksheet.DataValidations = &XLSXDataValidations{}
 				}
 				cell.DataValidation.Sqref = xC.R
 				worksheet.DataValidations.DataValidation = append(worksheet.DataValidations.DataValidation, cell.DataValidation)
@@ -766,7 +766,7 @@ func (s *Sheet) makeRows(worksheet *xlsxWorksheet, styles *xlsxStyleSheet, refTa
 
 			if cell.Hyperlink != (Hyperlink{}) {
 				if worksheet.Hyperlinks == nil {
-					worksheet.Hyperlinks = &xlsxHyperlinks{HyperLinks: []xlsxHyperlink{}}
+					worksheet.Hyperlinks = &XLSXHyperlinks{HyperLinks: []XLSXHyperlink{}}
 				}
 
 				var relId string
@@ -778,25 +778,25 @@ func (s *Sheet) makeRows(worksheet *xlsxWorksheet, styles *xlsxStyleSheet, refTa
 
 				if relId != "" {
 
-					xlsxLink := xlsxHyperlink{
+					XLSXLink := XLSXHyperlink{
 						RelationshipId: relId,
 						Reference:      xC.R,
 						DisplayString:  cell.Hyperlink.DisplayString,
 						Tooltip:        cell.Hyperlink.Tooltip}
-					worksheet.Hyperlinks.HyperLinks = append(worksheet.Hyperlinks.HyperLinks, xlsxLink)
+					worksheet.Hyperlinks.HyperLinks = append(worksheet.Hyperlinks.HyperLinks, XLSXLink)
 				}
 			}
 
 			if cell.HMerge > 0 || cell.VMerge > 0 {
 				// r == rownum, c == colnum
-				mc := xlsxMergeCell{}
+				mc := XLSXMergeCell{}
 				start := fmt.Sprintf("%s%d", ColIndexToLetters(c), r+1)
 				endcol := c + cell.HMerge
 				endrow := r + cell.VMerge + 1
 				end := fmt.Sprintf("%s%d", ColIndexToLetters(endcol), endrow)
 				mc.Ref = start + ":" + end
 				if worksheet.MergeCells == nil {
-					worksheet.MergeCells = &xlsxMergeCells{}
+					worksheet.MergeCells = &XLSXMergeCells{}
 				}
 				worksheet.MergeCells.Cells = append(worksheet.MergeCells.Cells, mc)
 				worksheet.MergeCells.addCell(mc)
@@ -827,11 +827,11 @@ func (s *Sheet) makeRows(worksheet *xlsxWorksheet, styles *xlsxStyleSheet, refTa
 	}
 
 	if s.AutoFilter != nil {
-		worksheet.AutoFilter = &xlsxAutoFilter{Ref: fmt.Sprintf("%v:%v", s.AutoFilter.TopLeftCell, s.AutoFilter.BottomRightCell)}
+		worksheet.AutoFilter = &XLSXAutoFilter{Ref: fmt.Sprintf("%v:%v", s.AutoFilter.TopLeftCell, s.AutoFilter.BottomRightCell)}
 	}
 
 	worksheet.SheetData = xSheet
-	dimension := xlsxDimension{}
+	dimension := XLSXDimension{}
 	dimension.Ref = "A1:" + GetCellIDStringFromCoords(maxCell, maxRow)
 	if dimension.Ref == "A1:A1" {
 		dimension.Ref = "A1"
@@ -840,18 +840,18 @@ func (s *Sheet) makeRows(worksheet *xlsxWorksheet, styles *xlsxStyleSheet, refTa
 	return nil
 }
 
-func (s *Sheet) makeDataValidations(worksheet *xlsxWorksheet) {
+func (s *Sheet) makeDataValidations(worksheet *XLSXWorksheet) {
 	s.mustBeOpen()
 	if len(s.DataValidations) > 0 {
 		if worksheet.DataValidations == nil {
-			worksheet.DataValidations = &xlsxDataValidations{}
+			worksheet.DataValidations = &XLSXDataValidations{}
 		}
 		worksheet.DataValidations.DataValidation = append(worksheet.DataValidations.DataValidation, s.DataValidations...)
 		worksheet.DataValidations.Count = len(worksheet.DataValidations.DataValidation)
 	}
 }
 
-func (s *Sheet) MarshalSheet(w io.Writer, refTable *RefTable, styles *xlsxStyleSheet, relations *xlsxWorksheetRels) error {
+func (s *Sheet) MarshalSheet(w io.Writer, refTable *RefTable, styles *XLSXStyleSheet, relations *XLSXWorksheetRels) error {
 	worksheet := newXlsxWorksheet()
 
 	s.handleMerged()
@@ -879,7 +879,7 @@ func (s *Sheet) MarshalSheet(w io.Writer, refTable *RefTable, styles *xlsxStyleS
 }
 
 // Dump sheet to its XML representation, intended for internal use only
-func (s *Sheet) makeXLSXSheet(refTable *RefTable, styles *xlsxStyleSheet, relations *xlsxWorksheetRels) *xlsxWorksheet {
+func (s *Sheet) makeXLSXSheet(refTable *RefTable, styles *XLSXStyleSheet, relations *XLSXWorksheetRels) *XLSXWorksheet {
 	s.mustBeOpen()
 	worksheet := newXlsxWorksheet()
 
@@ -897,13 +897,13 @@ func (s *Sheet) makeXLSXSheet(refTable *RefTable, styles *xlsxStyleSheet, relati
 	return worksheet
 }
 
-func handleStyleForXLSX(style *Style, NumFmtId int, styles *xlsxStyleSheet) (XfId int) {
+func handleStyleForXLSX(style *Style, NumFmtId int, styles *XLSXStyleSheet) (XfId int) {
 	xFont, xFill, xBorder, xCellXf := style.makeXLSXStyleElements()
 	fontId := styles.addFont(xFont)
 	fillId := styles.addFill(xFill)
 
 	// HACK - adding light grey fill, as in OO and Google
-	greyfill := xlsxFill{}
+	greyfill := XLSXFill{}
 	greyfill.PatternFill.PatternType = "lightGray"
 	styles.addFill(greyfill)
 
@@ -928,7 +928,7 @@ func handleStyleForXLSX(style *Style, NumFmtId int, styles *xlsxStyleSheet) (XfI
 	return
 }
 
-func handleNumFmtIdForXLSX(NumFmtId int, styles *xlsxStyleSheet) (XfId int) {
+func handleNumFmtIdForXLSX(NumFmtId int, styles *XLSXStyleSheet) (XfId int) {
 	xCellXf := makeXLSXCellElement()
 	xCellXf.NumFmtId = NumFmtId
 	if xCellXf.NumFmtId > 0 {

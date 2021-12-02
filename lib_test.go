@@ -234,7 +234,7 @@ func TestLib(t *testing.T) {
   </sheetData>
   <drawing r:id="rId1"/>
 </worksheet>`)
-		worksheet := new(xlsxWorksheet)
+		worksheet := new(XLSXWorksheet)
 		err := xml.NewDecoder(sheetxml).Decode(worksheet)
 		c.Assert(err, qt.IsNil)
 		minx, miny, maxx, maxy, err := calculateMaxMinFromWorksheet(worksheet)
@@ -334,10 +334,10 @@ func TestLib(t *testing.T) {
                header="0.3"
                footer="0.3"/>
 </worksheet>`)
-		worksheet := new(xlsxWorksheet)
+		worksheet := new(XLSXWorksheet)
 		err := xml.NewDecoder(sheetxml).Decode(worksheet)
 		c.Assert(err, qt.IsNil)
-		sst := new(xlsxSST)
+		sst := new(XLSXSST)
 		err = xml.NewDecoder(sharedstringsXML).Decode(sst)
 		c.Assert(err, qt.IsNil)
 		file := new(File)
@@ -428,10 +428,10 @@ func TestLib(t *testing.T) {
                header="0.3"
                footer="0.3"/>
 </worksheet>`)
-		worksheet := new(xlsxWorksheet)
+		worksheet := new(XLSXWorksheet)
 		err := xml.NewDecoder(sheetxml).Decode(worksheet)
 		c.Assert(err, qt.IsNil)
-		sst := new(xlsxSST)
+		sst := new(XLSXSST)
 		err = xml.NewDecoder(sharedstringsXML).Decode(sst)
 		c.Assert(err, qt.IsNil)
 		file := new(File)
@@ -481,10 +481,10 @@ func TestLib(t *testing.T) {
   </extLst>
 </worksheet>
 `)
-		worksheet := new(xlsxWorksheet)
+		worksheet := new(XLSXWorksheet)
 		err := xml.NewDecoder(sheetxml).Decode(worksheet)
 		c.Assert(err, qt.IsNil)
-		sst := new(xlsxSST)
+		sst := new(XLSXSST)
 		err = xml.NewDecoder(sharedstringsXML).Decode(sst)
 		c.Assert(err, qt.IsNil)
 
@@ -563,10 +563,10 @@ func TestLib(t *testing.T) {
   </extLst>
 </worksheet>
 `)
-		worksheet := new(xlsxWorksheet)
+		worksheet := new(XLSXWorksheet)
 		err := xml.NewDecoder(sheetxml).Decode(worksheet)
 		c.Assert(err, qt.IsNil)
-		sst := new(xlsxSST)
+		sst := new(XLSXSST)
 		err = xml.NewDecoder(sharedstringsXML).Decode(sst)
 		c.Assert(err, qt.IsNil)
 
@@ -712,10 +712,10 @@ func TestLib(t *testing.T) {
 </worksheet>
 
 `)
-		worksheet := new(xlsxWorksheet)
+		worksheet := new(XLSXWorksheet)
 		err := xml.NewDecoder(sheetxml).Decode(worksheet)
 		c.Assert(err, qt.IsNil)
-		sst := new(xlsxSST)
+		sst := new(XLSXSST)
 		err = xml.NewDecoder(sharedstringsXML).Decode(sst)
 		c.Assert(err, qt.IsNil)
 		file := new(File)
@@ -758,11 +758,11 @@ func TestLib(t *testing.T) {
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><dimension ref="A1:D8"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"><selection activeCell="A7" sqref="A7"/></sheetView></sheetViews><sheetFormatPr baseColWidth="10" defaultRowHeight="15"/><sheetData><row r="1" spans="1:4"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c></row><row r="2" spans="1:4"><c r="A2"><v>1</v></c></row><row r="3" spans="1:4"><c r="B3"><v>1</v></c></row><row r="4" spans="1:4"><c r="C4"><v>1</v></c></row><row r="5" spans="1:4"><c r="D5"><v>1</v></c></row><row r="6" spans="1:4"><c r="C6"><v>1</v></c></row><row r="7" spans="1:4"><c r="B7"><v>1</v></c></row><row r="8" spans="1:4"><c r="A8"><v>1</v></c></row></sheetData><pageMargins left="0.7" right="0.7" top="0.78740157499999996" bottom="0.78740157499999996" header="0.3" footer="0.3"/></worksheet>
 `)
-		worksheet := new(xlsxWorksheet)
+		worksheet := new(XLSXWorksheet)
 		err := xml.NewDecoder(sheetxml).Decode(worksheet)
 		c.Assert(err, qt.IsNil)
 
-		sst := new(xlsxSST)
+		sst := new(XLSXSST)
 		err = xml.NewDecoder(sharedstringsXML).Decode(sst)
 		c.Assert(err, qt.IsNil)
 
@@ -877,10 +877,10 @@ func TestLib(t *testing.T) {
                header="0.3"
                footer="0.3"/>
 </worksheet>`)
-		worksheet := new(xlsxWorksheet)
+		worksheet := new(XLSXWorksheet)
 		err := xml.NewDecoder(sheetxml).Decode(worksheet)
 		c.Assert(err, qt.IsNil)
-		sst := new(xlsxSST)
+		sst := new(XLSXSST)
 		err = xml.NewDecoder(sharedstringsXML).Decode(sst)
 		c.Assert(err, qt.IsNil)
 		file := new(File)
@@ -959,10 +959,10 @@ func TestLib(t *testing.T) {
                header="0.3"
                footer="0.3"/>
 </worksheet>`)
-		worksheet := new(xlsxWorksheet)
+		worksheet := new(XLSXWorksheet)
 		err := xml.NewDecoder(sheetxml).Decode(worksheet)
 		c.Assert(err, qt.IsNil)
-		sst := new(xlsxSST)
+		sst := new(XLSXSST)
 		err = xml.NewDecoder(sharedstringsXML).Decode(sst)
 		c.Assert(err, qt.IsNil)
 		file := new(File)
@@ -1038,10 +1038,10 @@ func TestLib(t *testing.T) {
 		            <c r="B1" s="1" t="s"><v>1</v></c>
 		        </row>
 		    </sheetData><drawing r:id="rId1"/></worksheet>`)
-		worksheet := new(xlsxWorksheet)
+		worksheet := new(XLSXWorksheet)
 		err := xml.NewDecoder(sheetxml).Decode(worksheet)
 		c.Assert(err, qt.IsNil)
-		sst := new(xlsxSST)
+		sst := new(XLSXSST)
 		err = xml.NewDecoder(sharedstringsXML).Decode(sst)
 		c.Assert(err, qt.IsNil)
 		file := new(File)
@@ -1079,15 +1079,15 @@ func TestLib(t *testing.T) {
 		c.Assert(cell2.Hidden, qt.Equals, true)
 	})
 
-	// // When converting the xlsxRow to a Row we create a as many cells as we find.
+	// // When converting the XLSXRow to a Row we create a as many cells as we find.
 	// csRunC(c, "ReadRowFromRaw", func(c *qt.C, constructor CellStoreConstructor) {
-	// 	var rawRow xlsxRow
-	// 	var cell xlsxC
+	// 	var rawRow XLSXRow
+	// 	var cell XLSXC
 	// 	var row *Row
 
-	// 	rawRow = xlsxRow{}
-	// 	cell = xlsxC{R: "A1"}
-	// 	cell = xlsxC{R: "A2"}
+	// 	rawRow = XLSXRow{}
+	// 	cell = XLSXC{R: "A1"}
+	// 	cell = XLSXC{R: "A2"}
 	// 	rawRow.C = append(rawRow.C, cell)
 	// 	sheet, err := NewSheetWithCellStore("test", constructor)
 	// 	c.Assert(err, qt.IsNil)
@@ -1100,14 +1100,14 @@ func TestLib(t *testing.T) {
 	// // When a cell claims it is at a position greater than its ordinal
 	// // position in the file we make up the missing cells.
 	// csRunC(c, "ReadRowFromRawWithMissingCells", func(c *qt.C, constructor CellStoreConstructor) {
-	// 	var rawRow xlsxRow
-	// 	var cell xlsxC
+	// 	var rawRow XLSXRow
+	// 	var cell XLSXC
 	// 	var row *Row
 
-	// 	rawRow = xlsxRow{}
-	// 	cell = xlsxC{R: "A1"}
+	// 	rawRow = XLSXRow{}
+	// 	cell = XLSXC{R: "A1"}
 	// 	rawRow.C = append(rawRow.C, cell)
-	// 	cell = xlsxC{R: "E1"}
+	// 	cell = XLSXC{R: "E1"}
 	// 	rawRow.C = append(rawRow.C, cell)
 	// 	sheet, err := NewSheetWithCellStore("test", constructor)
 	// 	c.Assert(err, qt.IsNil)
@@ -1119,18 +1119,18 @@ func TestLib(t *testing.T) {
 
 	// // We can cope with missing coordinate references
 	// csRunC(c, "ReadRowFromRawWithPartialCoordinates", func(c *qt.C, constructor CellStoreConstructor) {
-	// 	var rawRow xlsxRow
-	// 	var cell xlsxC
+	// 	var rawRow XLSXRow
+	// 	var cell XLSXC
 	// 	var row *Row
 
-	// 	rawRow = xlsxRow{}
-	// 	cell = xlsxC{R: "A1"}
+	// 	rawRow = XLSXRow{}
+	// 	cell = XLSXC{R: "A1"}
 	// 	rawRow.C = append(rawRow.C, cell)
-	// 	cell = xlsxC{}
+	// 	cell = XLSXC{}
 	// 	rawRow.C = append(rawRow.C, cell)
-	// 	cell = xlsxC{R: "Z:1"}
+	// 	cell = XLSXC{R: "Z:1"}
 	// 	rawRow.C = append(rawRow.C, cell)
-	// 	cell = xlsxC{}
+	// 	cell = XLSXC{}
 	// 	rawRow.C = append(rawRow.C, cell)
 	// 	sheet, err := NewSheetWithCellStore("test", constructor)
 	// 	c.Assert(err, qt.IsNil)
@@ -1186,7 +1186,7 @@ func TestLib(t *testing.T) {
                footer="0.3"/>
 </worksheet>`)
 
-		worksheet := new(xlsxWorksheet)
+		worksheet := new(XLSXWorksheet)
 		err := xml.NewDecoder(sheetxml).Decode(worksheet)
 		c.Assert(err, qt.IsNil)
 
@@ -1264,9 +1264,9 @@ func TestLib(t *testing.T) {
 		}
 
 		for i, formula := range formulas {
-			testCell := xlsxC{
+			testCell := XLSXC{
 				R: "D5",
-				F: &xlsxF{
+				F: &XLSXF{
 					Content: formula,
 					T:       "shared",
 					Si:      i,
@@ -1279,7 +1279,7 @@ func TestLib(t *testing.T) {
 
 	// Avoid panic when cell.F.T is "e" (for error)
 	c.Run("FormulaForCellPanic", func(c *qt.C) {
-		cell := xlsxC{R: "A1"}
+		cell := XLSXC{R: "A1"}
 		// This line would panic before the fix.
 		sharedFormulas := make(map[int]sharedFormula)
 
@@ -1328,11 +1328,11 @@ func TestLib(t *testing.T) {
 
 		sharedstringsXML := bytes.NewBufferString(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"/>`)
 
-		worksheet := new(xlsxWorksheet)
+		worksheet := new(XLSXWorksheet)
 		err := xml.NewDecoder(sheetXML).Decode(worksheet)
 		c.Assert(err, qt.IsNil)
 
-		sst := new(xlsxSST)
+		sst := new(XLSXSST)
 		err = xml.NewDecoder(sharedstringsXML).Decode(sst)
 		c.Assert(err, qt.IsNil)
 
@@ -1427,10 +1427,10 @@ func TestReadRowsFromSheet(t *testing.T) {
   </mergeCells>
   <drawing r:id="rId1"/>
 </worksheet>`)
-		worksheet := new(xlsxWorksheet)
+		worksheet := new(XLSXWorksheet)
 		err := xml.NewDecoder(sheetxml).Decode(worksheet)
 		c.Assert(err, qt.IsNil)
-		sst := new(xlsxSST)
+		sst := new(XLSXSST)
 		err = xml.NewDecoder(sharedstringsXML).Decode(sst)
 		c.Assert(err, qt.IsNil)
 		file := new(File)

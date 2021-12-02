@@ -68,9 +68,9 @@ func (s *SharedStringsSuite) SetUpTest(c *C) {
 }
 
 // Test we can correctly unmarshal an the sharedstrings.xml file into
-// an xlsx.xlsxSST struct and it's associated children.
+// an xlsx.XLSXSST struct and it's associated children.
 func (s *SharedStringsSuite) TestUnmarshallSharedStrings(c *C) {
-	sst := new(xlsxSST)
+	sst := new(XLSXSST)
 	err := xml.NewDecoder(s.SharedStringsXML).Decode(sst)
 	c.Assert(err, IsNil)
 	c.Assert(sst.Count, Equals, 5)
@@ -146,7 +146,7 @@ func (s *SharedStringsSuite) TestMarshalSI_T(c *C) {
 }
 
 func testMarshalSIT(c *C, t string, expected string) {
-	si := xlsxSI{T: &xlsxT{Text: t}}
+	si := XLSXSI{T: &XLSXT{Text: t}}
 	bytes, err := xml.Marshal(&si)
 	c.Assert(err, IsNil)
 	c.Assert(string(bytes), Equals, expected)
@@ -154,56 +154,56 @@ func testMarshalSIT(c *C, t string, expected string) {
 
 // TestMarshalSI_R tests that xlsxR is marshaled as it is expected.
 func (s *SharedStringsSuite) TestMarshalSI_R(c *C) {
-	testMarshalSIR(c, xlsxR{}, "<xlsxSI><r><t></t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a b c"}}, "<xlsxSI><r><t>a b c</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: " abc"}}, "<xlsxSI><r><t xml:space=\"preserve\"> abc</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "abc "}}, "<xlsxSI><r><t xml:space=\"preserve\">abc </t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "\nabc"}}, "<xlsxSI><r><t xml:space=\"preserve\">\nabc</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "abc\n"}}, "<xlsxSI><r><t xml:space=\"preserve\">abc\n</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "ab\nc"}}, "<xlsxSI><r><t xml:space=\"preserve\">ab\nc</t></r></xlsxSI>")
+	testMarshalSIR(c, XLSXR{}, "<xlsxSI><r><t></t></r></xlsxSI>")
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a b c"}}, "<xlsxSI><r><t>a b c</t></r></xlsxSI>")
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: " abc"}}, "<xlsxSI><r><t xml:space=\"preserve\"> abc</t></r></xlsxSI>")
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "abc "}}, "<xlsxSI><r><t xml:space=\"preserve\">abc </t></r></xlsxSI>")
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "\nabc"}}, "<xlsxSI><r><t xml:space=\"preserve\">\nabc</t></r></xlsxSI>")
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "abc\n"}}, "<xlsxSI><r><t xml:space=\"preserve\">abc\n</t></r></xlsxSI>")
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "ab\nc"}}, "<xlsxSI><r><t xml:space=\"preserve\">ab\nc</t></r></xlsxSI>")
 
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{RFont: &xlsxVal{Val: "Times New Roman"}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{RFont: &XLSXVal{Val: "Times New Roman"}}},
 		"<xlsxSI><r><rPr><rFont val=\"Times New Roman\"></rFont></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{Charset: &xlsxIntVal{Val: 1}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{Charset: &XLSXIntVal{Val: 1}}},
 		"<xlsxSI><r><rPr><charset val=\"1\"></charset></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{Family: &xlsxIntVal{Val: 1}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{Family: &XLSXIntVal{Val: 1}}},
 		"<xlsxSI><r><rPr><family val=\"1\"></family></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{B: xlsxBoolProp{Val: true}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{B: XLSXBoolProp{Val: true}}},
 		"<xlsxSI><r><rPr><b></b></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{I: xlsxBoolProp{Val: true}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{I: XLSXBoolProp{Val: true}}},
 		"<xlsxSI><r><rPr><i></i></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{Strike: xlsxBoolProp{Val: true}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{Strike: XLSXBoolProp{Val: true}}},
 		"<xlsxSI><r><rPr><strike></strike></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{Outline: xlsxBoolProp{Val: true}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{Outline: XLSXBoolProp{Val: true}}},
 		"<xlsxSI><r><rPr><outline></outline></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{Shadow: xlsxBoolProp{Val: true}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{Shadow: XLSXBoolProp{Val: true}}},
 		"<xlsxSI><r><rPr><shadow></shadow></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{Condense: xlsxBoolProp{Val: true}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{Condense: XLSXBoolProp{Val: true}}},
 		"<xlsxSI><r><rPr><condense></condense></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{Extend: xlsxBoolProp{Val: true}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{Extend: XLSXBoolProp{Val: true}}},
 		"<xlsxSI><r><rPr><extend></extend></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{Color: &xlsxColor{RGB: "FF123456"}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{Color: &XLSXColor{RGB: "FF123456"}}},
 		"<xlsxSI><r><rPr><color rgb=\"FF123456\"></color></rPr><t>a</t></r></xlsxSI>")
 	colorIndex := 11
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{Color: &xlsxColor{Indexed: &colorIndex}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{Color: &XLSXColor{Indexed: &colorIndex}}},
 		"<xlsxSI><r><rPr><color indexed=\"11\"></color></rPr><t>a</t></r></xlsxSI>")
 	colorTheme := 5
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{Color: &xlsxColor{Theme: &colorTheme}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{Color: &XLSXColor{Theme: &colorTheme}}},
 		"<xlsxSI><r><rPr><color theme=\"5\"></color></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{Color: &xlsxColor{Theme: &colorTheme, Tint: 0.1}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{Color: &XLSXColor{Theme: &colorTheme, Tint: 0.1}}},
 		"<xlsxSI><r><rPr><color theme=\"5\" tint=\"0.1\"></color></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{Sz: &xlsxFloatVal{Val: 12.5}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{Sz: &XLSXFloatVal{Val: 12.5}}},
 		"<xlsxSI><r><rPr><sz val=\"12.5\"></sz></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{U: &xlsxVal{Val: "single"}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{U: &XLSXVal{Val: "single"}}},
 		"<xlsxSI><r><rPr><u val=\"single\"></u></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{VertAlign: &xlsxVal{Val: "superscript"}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{VertAlign: &XLSXVal{Val: "superscript"}}},
 		"<xlsxSI><r><rPr><vertAlign val=\"superscript\"></vertAlign></rPr><t>a</t></r></xlsxSI>")
-	testMarshalSIR(c, xlsxR{T: xlsxT{Text: "a"}, RPr: &xlsxRunProperties{Scheme: &xlsxVal{Val: "major"}}},
+	testMarshalSIR(c, XLSXR{T: XLSXT{Text: "a"}, RPr: &XLSXRunProperties{Scheme: &XLSXVal{Val: "major"}}},
 		"<xlsxSI><r><rPr><scheme val=\"major\"></scheme></rPr><t>a</t></r></xlsxSI>")
 }
 
-func testMarshalSIR(c *C, r xlsxR, expected string) {
-	si := xlsxSI{R: []xlsxR{r}}
+func testMarshalSIR(c *C, r XLSXR, expected string) {
+	si := XLSXSI{R: []XLSXR{r}}
 	bytes, err := xml.Marshal(&si)
 	c.Assert(err, IsNil)
 	c.Assert(string(bytes), Equals, expected)

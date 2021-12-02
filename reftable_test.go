@@ -73,10 +73,10 @@ func (s *RefTableSuite) TestCreateNewSharedStringRefTable(c *C) {
 	c.Assert(r, IsNil)
 }
 
-// Test we can correctly convert a xlsxSST into a reference table
+// Test we can correctly convert a XLSXSST into a reference table
 // using xlsx.MakeSharedStringRefTable().
 func (s *RefTableSuite) TestMakeSharedStringRefTable(c *C) {
-	sst := new(xlsxSST)
+	sst := new(XLSXSST)
 	err := xml.NewDecoder(s.SharedStringsXML).Decode(sst)
 	c.Assert(err, IsNil)
 	reftable := MakeSharedStringRefTable(sst)
@@ -105,7 +105,7 @@ func (s *RefTableSuite) TestMakeSharedStringRefTable(c *C) {
 // Test we can correctly resolve a numeric reference in the reference
 // table to a string value using RefTable.ResolveSharedString().
 func (s *RefTableSuite) TestResolveSharedString(c *C) {
-	sst := new(xlsxSST)
+	sst := new(XLSXSST)
 	err := xml.NewDecoder(s.SharedStringsXML).Decode(sst)
 	c.Assert(err, IsNil)
 	reftable := MakeSharedStringRefTable(sst)
@@ -114,7 +114,7 @@ func (s *RefTableSuite) TestResolveSharedString(c *C) {
 	c.Assert(r, IsNil)
 }
 
-// Test we can correctly create the xlsx.xlsxSST struct from a RefTable
+// Test we can correctly create the xlsx.XLSXSST struct from a RefTable
 func (s *RefTableSuite) TestMakeXLSXSST(c *C) {
 	refTable := NewSharedStringRefTable()
 	refTable.AddString("Foo")

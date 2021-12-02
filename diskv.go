@@ -919,7 +919,7 @@ func readStyle(reader *bytes.Reader) (*Style, error) {
 	return s, nil
 }
 
-func writeDataValidation(buf *bytes.Buffer, dv *xlsxDataValidation) error {
+func writeDataValidation(buf *bytes.Buffer, dv *XLSXDataValidation) error {
 	var err error
 	if err = writeBool(buf, dv.AllowBlank); err != nil {
 		return err
@@ -966,9 +966,9 @@ func writeDataValidation(buf *bytes.Buffer, dv *xlsxDataValidation) error {
 	return nil
 }
 
-func readDataValidation(reader *bytes.Reader) (*xlsxDataValidation, error) {
+func readDataValidation(reader *bytes.Reader) (*XLSXDataValidation, error) {
 	var err error
-	dv := &xlsxDataValidation{}
+	dv := &XLSXDataValidation{}
 	if dv.AllowBlank, err = readBool(reader); err != nil {
 		return dv, err
 	}

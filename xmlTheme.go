@@ -2,54 +2,54 @@ package xlsx
 
 import "encoding/xml"
 
-// xlsxTheme directly maps the theme element in the namespace
+// XLSXTheme directly maps the theme element in the namespace
 // http://schemas.openxmlformats.org/drawingml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxTheme struct {
-	ThemeElements xlsxThemeElements `xml:"themeElements"`
+type XLSXTheme struct {
+	ThemeElements XLSXThemeElements `xml:"themeElements"`
 }
 
-// xlsxThemeElements directly maps the themeElements element in the namespace
+// XLSXThemeElements directly maps the themeElements element in the namespace
 // http://schemas.openxmlformats.org/drawingml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxThemeElements struct {
-	ClrScheme xlsxClrScheme `xml:"clrScheme"`
+type XLSXThemeElements struct {
+	ClrScheme XLSXClrScheme `xml:"clrScheme"`
 }
 
-// xlsxClrScheme directly maps the clrScheme element in the namespace
+// XLSXClrScheme directly maps the clrScheme element in the namespace
 // http://schemas.openxmlformats.org/drawingml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxClrScheme struct {
+type XLSXClrScheme struct {
 	Name     string            `xml:"name,attr"`
-	Children []xlsxClrSchemeEl `xml:",any"`
+	Children []XLSXClrSchemeEl `xml:",any"`
 }
 
-// xlsxClrScheme maps to children of the clrScheme element in the namespace
+// XLSXClrScheme maps to children of the clrScheme element in the namespace
 // http://schemas.openxmlformats.org/drawingml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxClrSchemeEl struct {
+type XLSXClrSchemeEl struct {
 	XMLName xml.Name
-	SysClr  *xlsxSysClr  `xml:"sysClr"`
-	SrgbClr *xlsxSrgbClr `xml:"srgbClr"`
+	SysClr  *XLSXSysClr  `xml:"sysClr"`
+	SrgbClr *XLSXSrgbClr `xml:"srgbClr"`
 }
 
-// xlsxSysClr directly maps the sysClr element in the namespace
+// XLSXSysClr directly maps the sysClr element in the namespace
 // http://schemas.openxmlformats.org/drawingml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxSysClr struct {
+type XLSXSysClr struct {
 	Val     string `xml:"val,attr"`
 	LastClr string `xml:"lastClr,attr"`
 }
 
-// xlsxSrgbClr directly maps the srgbClr element in the namespace
+// XLSXSrgbClr directly maps the srgbClr element in the namespace
 // http://schemas.openxmlformats.org/drawingml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxSrgbClr struct {
+type XLSXSrgbClr struct {
 	Val string `xml:"val,attr"`
 }

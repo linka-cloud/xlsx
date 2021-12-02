@@ -10,13 +10,13 @@ import (
 func TestIndexedColor(t *testing.T) {
 	c := qt.New(t)
 
-	colors := xlsxColors{}
+	colors := XLSXColors{}
 	c.Run("Unitialised", func(c *qt.C) {
 		c.Assert(colors.indexedColor(1), qt.Equals, "FF000000")
 	})
 
 	c.Run("Initialised", func(c *qt.C) {
-		colors.IndexedColors = []xlsxRgbColor{{Rgb: "00FF00FF"}}
+		colors.IndexedColors = []XLSXRgbColor{{Rgb: "00FF00FF"}}
 		c.Assert(colors.indexedColor(1), qt.Equals, "00FF00FF")
 	})
 }
@@ -25,8 +25,8 @@ func TestXMLStyle(t *testing.T) {
 	c := qt.New(t)
 
 	// Test we produce valid output for an empty style file.
-	c.Run("MarshalEmptyXlsxStyleSheet", func(c *qt.C) {
-		styles := newXlsxStyleSheet(nil)
+	c.Run("MarshalEmptyXLSXStyleSheet", func(c *qt.C) {
+		styles := newXLSXStyleSheet(nil)
 		result, err := styles.Marshal()
 		c.Assert(err, qt.IsNil)
 		c.Assert(string(result), qt.Equals, `<?xml version="1.0" encoding="UTF-8"?>
@@ -34,18 +34,18 @@ func TestXMLStyle(t *testing.T) {
 	})
 
 	// Test we produce valid output for a style file with one font definition.
-	c.Run("MarshalXlsxStyleSheetWithAFont", func(c *qt.C) {
-		styles := newXlsxStyleSheet(nil)
-		styles.Fonts = xlsxFonts{}
+	c.Run("MarshalXLSXStyleSheetWithAFont", func(c *qt.C) {
+		styles := newXLSXStyleSheet(nil)
+		styles.Fonts = XLSXFonts{}
 		styles.Fonts.Count = 1
-		styles.Fonts.Font = make([]xlsxFont, 1)
-		font := xlsxFont{}
+		styles.Fonts.Font = make([]XLSXFont, 1)
+		font := XLSXFont{}
 		font.Sz.Val = "10"
 		font.Name.Val = "Andale Mono"
-		font.B = &xlsxVal{}
-		font.I = &xlsxVal{}
-		font.U = &xlsxVal{}
-		font.Strike = &xlsxVal{}
+		font.B = &XLSXVal{}
+		font.I = &XLSXVal{}
+		font.U = &XLSXVal{}
+		font.Strike = &XLSXVal{}
 		styles.Fonts.Font[0] = font
 
 		expected := `<?xml version="1.0" encoding="UTF-8"?>
@@ -56,16 +56,16 @@ func TestXMLStyle(t *testing.T) {
 	})
 
 	// Test we produce valid output for a style file with one fill definition.
-	c.Run("MarshalXlsxStyleSheetWithAFill", func(c *qt.C) {
-		styles := newXlsxStyleSheet(nil)
-		styles.Fills = xlsxFills{}
+	c.Run("MarshalXLSXStyleSheetWithAFill", func(c *qt.C) {
+		styles := newXLSXStyleSheet(nil)
+		styles.Fills = XLSXFills{}
 		styles.Fills.Count = 1
-		styles.Fills.Fill = make([]xlsxFill, 1)
-		fill := xlsxFill{}
-		patternFill := xlsxPatternFill{
+		styles.Fills.Fill = make([]XLSXFill, 1)
+		fill := XLSXFill{}
+		patternFill := XLSXPatternFill{
 			PatternType: "solid",
-			FgColor:     xlsxColor{RGB: "#FFFFFF"},
-			BgColor:     xlsxColor{RGB: "#000000"}}
+			FgColor:     XLSXColor{RGB: "#FFFFFF"},
+			BgColor:     XLSXColor{RGB: "#000000"}}
 		fill.PatternFill = patternFill
 		styles.Fills.Fill[0] = fill
 
@@ -78,12 +78,12 @@ func TestXMLStyle(t *testing.T) {
 
 	// Test we produce valid output for a style file with one border definition.
 	// Empty elements are required to accommodate for Excel quirks.
-	c.Run("MarshalXlsxStyleSheetWithABorder", func(c *qt.C) {
-		styles := newXlsxStyleSheet(nil)
-		styles.Borders = xlsxBorders{}
+	c.Run("MarshalXLSXStyleSheetWithABorder", func(c *qt.C) {
+		styles := newXLSXStyleSheet(nil)
+		styles.Borders = XLSXBorders{}
 		styles.Borders.Count = 1
-		styles.Borders.Border = make([]xlsxBorder, 1)
-		border := xlsxBorder{}
+		styles.Borders.Border = make([]XLSXBorder, 1)
+		border := XLSXBorder{}
 		border.Left.Style = "solid"
 		border.Top.Style = ""
 		styles.Borders.Border[0] = border
@@ -96,12 +96,12 @@ func TestXMLStyle(t *testing.T) {
 	})
 
 	// Test we produce valid output for a style file with one cellStyleXf definition.
-	c.Run("MarshalXlsxStyleSheetWithACellStyleXf", func(c *qt.C) {
-		styles := newXlsxStyleSheet(nil)
-		styles.CellStyleXfs = &xlsxCellStyleXfs{}
+	c.Run("MarshalXLSXStyleSheetWithACellStyleXf", func(c *qt.C) {
+		styles := newXLSXStyleSheet(nil)
+		styles.CellStyleXfs = &XLSXCellStyleXfs{}
 		styles.CellStyleXfs.Count = 1
-		styles.CellStyleXfs.Xf = make([]xlsxXf, 1)
-		xf := xlsxXf{}
+		styles.CellStyleXfs.Xf = make([]XLSXXf, 1)
+		xf := XLSXXf{}
 		xf.ApplyAlignment = true
 		xf.ApplyBorder = true
 		xf.ApplyFont = true
@@ -111,7 +111,7 @@ func TestXMLStyle(t *testing.T) {
 		xf.FillId = 0
 		xf.FontId = 0
 		xf.NumFmtId = 0
-		xf.Alignment = xlsxAlignment{
+		xf.Alignment = XLSXAlignment{
 			Horizontal:   "left",
 			Indent:       1,
 			ShrinkToFit:  true,
@@ -128,25 +128,25 @@ func TestXMLStyle(t *testing.T) {
 	})
 
 	// Test we produce valid output for a style file with one cellStyle definition.
-	c.Run("MarshalXlsxStyleSheetWithACellStyle", func(c *qt.C) {
+	c.Run("MarshalXLSXStyleSheetWithACellStyle", func(c *qt.C) {
 		var builtInId int
-		styles := newXlsxStyleSheet(nil)
-		styles.CellStyles = &xlsxCellStyles{Count: 2}
-		styles.CellStyles.CellStyle = make([]xlsxCellStyle, 2)
+		styles := newXLSXStyleSheet(nil)
+		styles.CellStyles = &XLSXCellStyles{Count: 2}
+		styles.CellStyles.CellStyle = make([]XLSXCellStyle, 2)
 
 		builtInId = 31
-		styles.CellStyles.CellStyle[0] = xlsxCellStyle{
+		styles.CellStyles.CellStyle[0] = XLSXCellStyle{
 			Name:      "Bob",
 			BuiltInId: &builtInId, // XXX Todo - work out built-ins!
 			XfId:      0,
 		}
-		styles.CellStyles.CellStyle[1] = xlsxCellStyle{
+		styles.CellStyles.CellStyle[1] = XLSXCellStyle{
 			Name: "Unknown",
 			XfId: 1,
 		}
-		styles.CellStyleXfs = &xlsxCellStyleXfs{
+		styles.CellStyleXfs = &XLSXCellStyleXfs{
 			Count: 1,
-			Xf: []xlsxXf{{}},
+			Xf: []XLSXXf{{}},
 		}
 		expected := `<?xml version="1.0" encoding="UTF-8"?>
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cellStyleXfs count="1"><xf applyAlignment="0" applyBorder="0" applyFont="0" applyFill="0" applyNumberFormat="0" applyProtection="0" borderId="0" fillId="0" fontId="0" numFmtId="0"><alignment horizontal="general" indent="0" shrinkToFit="0" textRotation="0" vertical="bottom" wrapText="0"/></xf></cellStyleXfs><cellStyles count="1"><cellStyle builtInId="31" name="Bob" xfId="0"></cellStyle></cellStyles></styleSheet>`
@@ -157,12 +157,12 @@ func TestXMLStyle(t *testing.T) {
 
 	// Test we produce valid output for a style file with one cellXf
 	// definition.
-	c.Run("MarshalXlsxStyleSheetWithACellXf", func(c *qt.C) {
-		styles := newXlsxStyleSheet(nil)
-		styles.CellXfs = xlsxCellXfs{}
+	c.Run("MarshalXLSXStyleSheetWithACellXf", func(c *qt.C) {
+		styles := newXLSXStyleSheet(nil)
+		styles.CellXfs = XLSXCellXfs{}
 		styles.CellXfs.Count = 1
-		styles.CellXfs.Xf = make([]xlsxXf, 1)
-		xf := xlsxXf{}
+		styles.CellXfs.Xf = make([]XLSXXf, 1)
+		xf := XLSXXf{}
 		xf.ApplyAlignment = true
 		xf.ApplyBorder = true
 		xf.ApplyFont = true
@@ -173,7 +173,7 @@ func TestXMLStyle(t *testing.T) {
 		xf.FillId = 0
 		xf.FontId = 0
 		xf.NumFmtId = 0
-		xf.Alignment = xlsxAlignment{
+		xf.Alignment = XLSXAlignment{
 			Horizontal:   "left",
 			Indent:       1,
 			ShrinkToFit:  true,
@@ -191,11 +191,11 @@ func TestXMLStyle(t *testing.T) {
 
 	// Test we produce valid output for a style file with one NumFmt
 	// definition.
-	c.Run("MarshalXlsxStyleSheetWithANumFmt", func(c *qt.C) {
-		styles := &xlsxStyleSheet{}
-		styles.NumFmts = &xlsxNumFmts{}
-		styles.NumFmts.NumFmt = make([]xlsxNumFmt, 0)
-		numFmt := xlsxNumFmt{NumFmtId: 164, FormatCode: "GENERAL"}
+	c.Run("MarshalXLSXStyleSheetWithANumFmt", func(c *qt.C) {
+		styles := &XLSXStyleSheet{}
+		styles.NumFmts = &XLSXNumFmts{}
+		styles.NumFmts.NumFmt = make([]XLSXNumFmt, 0)
+		numFmt := XLSXNumFmt{NumFmtId: 164, FormatCode: "GENERAL"}
 		styles.addNumFmt(numFmt)
 
 		expected := `<?xml version="1.0" encoding="UTF-8"?>
@@ -206,20 +206,20 @@ func TestXMLStyle(t *testing.T) {
 	})
 
 	c.Run("Fontqt.Equals", func(c *qt.C) {
-		fontA := xlsxFont{Sz: xlsxVal{Val: "11"},
-			Color:  xlsxColor{RGB: "FFFF0000"},
-			Name:   xlsxVal{Val: "Calibri"},
-			Family: xlsxVal{Val: "2"},
-			B:      &xlsxVal{},
-			I:      &xlsxVal{},
-			U:      &xlsxVal{}}
-		fontB := xlsxFont{Sz: xlsxVal{Val: "11"},
-			Color:  xlsxColor{RGB: "FFFF0000"},
-			Name:   xlsxVal{Val: "Calibri"},
-			Family: xlsxVal{Val: "2"},
-			B:      &xlsxVal{},
-			I:      &xlsxVal{},
-			U:      &xlsxVal{}}
+		fontA := XLSXFont{Sz: XLSXVal{Val: "11"},
+			Color:  XLSXColor{RGB: "FFFF0000"},
+			Name:   XLSXVal{Val: "Calibri"},
+			Family: XLSXVal{Val: "2"},
+			B:      &XLSXVal{},
+			I:      &XLSXVal{},
+			U:      &XLSXVal{}}
+		fontB := XLSXFont{Sz: XLSXVal{Val: "11"},
+			Color:  XLSXColor{RGB: "FFFF0000"},
+			Name:   XLSXVal{Val: "Calibri"},
+			Family: XLSXVal{Val: "2"},
+			B:      &XLSXVal{},
+			I:      &XLSXVal{},
+			U:      &XLSXVal{}}
 
 		c.Assert(fontA.Equals(fontB), qt.Equals, true)
 		fontB.Sz.Val = "12"
@@ -236,26 +236,26 @@ func TestXMLStyle(t *testing.T) {
 		fontB.Family.Val = "2"
 		fontB.B = nil
 		c.Assert(fontA.Equals(fontB), qt.Equals, false)
-		fontB.B = &xlsxVal{}
+		fontB.B = &XLSXVal{}
 		fontB.I = nil
 		c.Assert(fontA.Equals(fontB), qt.Equals, false)
-		fontB.I = &xlsxVal{}
+		fontB.I = &XLSXVal{}
 		fontB.U = nil
 		c.Assert(fontA.Equals(fontB), qt.Equals, false)
-		fontB.U = &xlsxVal{}
+		fontB.U = &XLSXVal{}
 		// For sanity
 		c.Assert(fontA.Equals(fontB), qt.Equals, true)
 	})
 
 	c.Run("FillEquals", func(c *qt.C) {
-		fillA := xlsxFill{PatternFill: xlsxPatternFill{
+		fillA := XLSXFill{PatternFill: XLSXPatternFill{
 			PatternType: "solid",
-			FgColor:     xlsxColor{RGB: "FFFF0000"},
-			BgColor:     xlsxColor{RGB: "0000FFFF"}}}
-		fillB := xlsxFill{PatternFill: xlsxPatternFill{
+			FgColor:     XLSXColor{RGB: "FFFF0000"},
+			BgColor:     XLSXColor{RGB: "0000FFFF"}}}
+		fillB := XLSXFill{PatternFill: XLSXPatternFill{
 			PatternType: "solid",
-			FgColor:     xlsxColor{RGB: "FFFF0000"},
-			BgColor:     xlsxColor{RGB: "0000FFFF"}}}
+			FgColor:     XLSXColor{RGB: "FFFF0000"},
+			BgColor:     XLSXColor{RGB: "0000FFFF"}}}
 		c.Assert(fillA.Equals(fillB), qt.Equals, true)
 		fillB.PatternFill.PatternType = "gray125"
 		c.Assert(fillA.Equals(fillB), qt.Equals, false)
@@ -271,14 +271,14 @@ func TestXMLStyle(t *testing.T) {
 	})
 
 	c.Run("BorderEquals", func(c *qt.C) {
-		borderA := xlsxBorder{Left: xlsxLine{Style: "none"},
-			Right:  xlsxLine{Style: "none"},
-			Top:    xlsxLine{Style: "none"},
-			Bottom: xlsxLine{Style: "none"}}
-		borderB := xlsxBorder{Left: xlsxLine{Style: "none"},
-			Right:  xlsxLine{Style: "none"},
-			Top:    xlsxLine{Style: "none"},
-			Bottom: xlsxLine{Style: "none"}}
+		borderA := XLSXBorder{Left: XLSXLine{Style: "none"},
+			Right:  XLSXLine{Style: "none"},
+			Top:    XLSXLine{Style: "none"},
+			Bottom: XLSXLine{Style: "none"}}
+		borderB := XLSXBorder{Left: XLSXLine{Style: "none"},
+			Right:  XLSXLine{Style: "none"},
+			Top:    XLSXLine{Style: "none"},
+			Bottom: XLSXLine{Style: "none"}}
 		c.Assert(borderA.Equals(borderB), qt.Equals, true)
 		borderB.Left.Style = "thin"
 		c.Assert(borderA.Equals(borderB), qt.Equals, false)
@@ -297,7 +297,7 @@ func TestXMLStyle(t *testing.T) {
 	})
 
 	c.Run("XfEquals", func(c *qt.C) {
-		xfA := xlsxXf{
+		xfA := XLSXXf{
 			ApplyAlignment:  true,
 			ApplyBorder:     true,
 			ApplyFont:       true,
@@ -307,7 +307,7 @@ func TestXMLStyle(t *testing.T) {
 			FillId:          0,
 			FontId:          0,
 			NumFmtId:        0}
-		xfB := xlsxXf{
+		xfB := XLSXXf{
 			ApplyAlignment:  true,
 			ApplyBorder:     true,
 			ApplyFont:       true,
@@ -370,64 +370,64 @@ func TestStyleSheet(t *testing.T) {
 	c := qt.New(t)
 
 	c.Run("NewNumFmt", func(c *qt.C) {
-		styles := newXlsxStyleSheet(nil)
-		styles.NumFmts = &xlsxNumFmts{}
-		styles.NumFmts.NumFmt = make([]xlsxNumFmt, 0)
+		styles := newXLSXStyleSheet(nil)
+		styles.NumFmts = &XLSXNumFmts{}
+		styles.NumFmts.NumFmt = make([]XLSXNumFmt, 0)
 
-		c.Assert(styles.newNumFmt("0"), qt.DeepEquals, xlsxNumFmt{1, "0"})
-		c.Assert(styles.newNumFmt("0.00e+00"), qt.DeepEquals, xlsxNumFmt{11, "0.00e+00"})
-		c.Assert(styles.newNumFmt("mm-dd-yy"), qt.DeepEquals, xlsxNumFmt{14, "mm-dd-yy"})
-		c.Assert(styles.newNumFmt("hh:mm:ss"), qt.DeepEquals, xlsxNumFmt{164, "hh:mm:ss"})
+		c.Assert(styles.newNumFmt("0"), qt.DeepEquals, XLSXNumFmt{1, "0"})
+		c.Assert(styles.newNumFmt("0.00e+00"), qt.DeepEquals, XLSXNumFmt{11, "0.00e+00"})
+		c.Assert(styles.newNumFmt("mm-dd-yy"), qt.DeepEquals, XLSXNumFmt{14, "mm-dd-yy"})
+		c.Assert(styles.newNumFmt("hh:mm:ss"), qt.DeepEquals, XLSXNumFmt{164, "hh:mm:ss"})
 		c.Assert(len(styles.NumFmts.NumFmt), qt.Equals, 1)
 	})
 
 	c.Run("AddNumFmt", func(c *qt.C) {
-		styles := &xlsxStyleSheet{}
-		styles.NumFmts = &xlsxNumFmts{}
-		styles.NumFmts.NumFmt = make([]xlsxNumFmt, 0)
+		styles := &XLSXStyleSheet{}
+		styles.NumFmts = &XLSXNumFmts{}
+		styles.NumFmts.NumFmt = make([]XLSXNumFmt, 0)
 
-		styles.addNumFmt(xlsxNumFmt{1, "0"})
+		styles.addNumFmt(XLSXNumFmt{1, "0"})
 		c.Assert(styles.NumFmts.Count, qt.Equals, 0)
-		styles.addNumFmt(xlsxNumFmt{14, "mm-dd-yy"})
+		styles.addNumFmt(XLSXNumFmt{14, "mm-dd-yy"})
 		c.Assert(styles.NumFmts.Count, qt.Equals, 0)
-		styles.addNumFmt(xlsxNumFmt{164, "hh:mm:ss"})
+		styles.addNumFmt(XLSXNumFmt{164, "hh:mm:ss"})
 		c.Assert(styles.NumFmts.Count, qt.Equals, 1)
-		styles.addNumFmt(xlsxNumFmt{165, "yyyy/mm/dd"})
+		styles.addNumFmt(XLSXNumFmt{165, "yyyy/mm/dd"})
 		c.Assert(styles.NumFmts.Count, qt.Equals, 2)
-		styles.addNumFmt(xlsxNumFmt{165, "yyyy/mm/dd"})
+		styles.addNumFmt(XLSXNumFmt{165, "yyyy/mm/dd"})
 		c.Assert(styles.NumFmts.Count, qt.Equals, 2)
 	})
 
 	c.Run("GetStyle", func(c *qt.C) {
 		c.Run("NoNamedStyleIndex", func(c *qt.C) {
-			styles := newXlsxStyleSheet(nil)
+			styles := newXLSXStyleSheet(nil)
 			s0 := styles.getStyle(0)
 			c.Assert(s0.NamedStyleIndex, qt.Equals, (*int)(nil))
 		})
 		c.Run("NamedStyleIndex", func(c *qt.C) {
-			styles := newXlsxStyleSheet(nil)
+			styles := newXLSXStyleSheet(nil)
 			namedStyleId := 20
-			csXfs := xlsxCellStyleXfs{}
-			csXfs.addXf(xlsxXf{XfId: &namedStyleId})
+			csXfs := XLSXCellStyleXfs{}
+			csXfs.addXf(XLSXXf{XfId: &namedStyleId})
 			styles.CellStyleXfs = &csXfs
 			cellStyleId := 0
-			styles.CellXfs.addXf(xlsxXf{XfId: &cellStyleId})
+			styles.CellXfs.addXf(XLSXXf{XfId: &cellStyleId})
 			s0 := styles.getStyle(0)
 			c.Assert(s0.NamedStyleIndex, qt.Equals, &cellStyleId)
 		})
 
 		c.Run("NamedStyleWins", func(c *qt.C) {
-			styles := newXlsxStyleSheet(nil)
+			styles := newXLSXStyleSheet(nil)
 			namedStyleId := 20
-			csXfs := xlsxCellStyleXfs{}
-			csXfs.addXf(xlsxXf{XfId: &namedStyleId,
+			csXfs := XLSXCellStyleXfs{}
+			csXfs.addXf(XLSXXf{XfId: &namedStyleId,
 				ApplyBorder: true,
 				ApplyFont:   false,
 			})
 			styles.CellStyleXfs = &csXfs
 			cellStyleId := 0
 			styles.CellXfs.addXf(
-				xlsxXf{
+				XLSXXf{
 					XfId:        &cellStyleId,
 					ApplyBorder: false,
 					ApplyFont:   true,
@@ -442,15 +442,15 @@ func TestStyleSheet(t *testing.T) {
 
 	c.Run("PopulateStyleFromXf", func(c *qt.C) {
 		c.Run("ApplyBorder", func(c *qt.C) {
-			styles := newXlsxStyleSheet(nil)
+			styles := newXLSXStyleSheet(nil)
 			style := &Style{}
-			xf := xlsxXf{
+			xf := XLSXXf{
 				ApplyBorder: true,
 			}
 			styles.populateStyleFromXf(style, xf)
 			c.Assert(style.ApplyBorder, qt.Equals, true)
 
-			xf = xlsxXf{
+			xf = XLSXXf{
 				ApplyBorder: false,
 			}
 			styles.populateStyleFromXf(style, xf)
@@ -458,56 +458,56 @@ func TestStyleSheet(t *testing.T) {
 		})
 
 		c.Run("ApplyFill", func(c *qt.C) {
-			styles := newXlsxStyleSheet(nil)
+			styles := newXLSXStyleSheet(nil)
 			style := &Style{}
-			xf := xlsxXf{
+			xf := XLSXXf{
 				ApplyFill: true,
 			}
 			styles.populateStyleFromXf(style, xf)
 			c.Assert(style.ApplyFill, qt.Equals, true)
 
-			xf = xlsxXf{
+			xf = XLSXXf{
 				ApplyFill: false,
 			}
 			styles.populateStyleFromXf(style, xf)
 			c.Assert(style.ApplyFill, qt.Equals, false)
 		})
 		c.Run("ApplyFont", func(c *qt.C) {
-			styles := newXlsxStyleSheet(nil)
+			styles := newXLSXStyleSheet(nil)
 			style := &Style{}
-			xf := xlsxXf{
+			xf := XLSXXf{
 				ApplyFont: true,
 			}
 			styles.populateStyleFromXf(style, xf)
 			c.Assert(style.ApplyFont, qt.Equals, true)
 
-			xf = xlsxXf{
+			xf = XLSXXf{
 				ApplyFont: false,
 			}
 			styles.populateStyleFromXf(style, xf)
 			c.Assert(style.ApplyFont, qt.Equals, false)
 		})
 		c.Run("ApplyAlignment", func(c *qt.C) {
-			styles := newXlsxStyleSheet(nil)
+			styles := newXLSXStyleSheet(nil)
 			style := &Style{}
-			xf := xlsxXf{
+			xf := XLSXXf{
 				ApplyAlignment: true,
 			}
 			styles.populateStyleFromXf(style, xf)
 			c.Assert(style.ApplyAlignment, qt.Equals, true)
 
-			xf = xlsxXf{
+			xf = XLSXXf{
 				ApplyAlignment: false,
 			}
 			styles.populateStyleFromXf(style, xf)
 			c.Assert(style.ApplyAlignment, qt.Equals, false)
 		})
 		c.Run("Border", func(c *qt.C) {
-			styles := newXlsxStyleSheet(nil)
-			line := xlsxLine{Style: "fake", Color: xlsxColor{RGB: "00aaff"}}
+			styles := newXLSXStyleSheet(nil)
+			line := XLSXLine{Style: "fake", Color: XLSXColor{RGB: "00aaff"}}
 
-			borders := xlsxBorders{}
-			border := xlsxBorder{
+			borders := XLSXBorders{}
+			border := XLSXBorder{
 				Left:   line,
 				Right:  line,
 				Top:    line,
@@ -517,7 +517,7 @@ func TestStyleSheet(t *testing.T) {
 
 			styles.Borders = borders
 			style := &Style{}
-			xf := xlsxXf{
+			xf := XLSXXf{
 				ApplyBorder: true,
 				BorderId:    0,
 			}
@@ -535,22 +535,22 @@ func TestStyleSheet(t *testing.T) {
 		})
 
 		c.Run("Fill", func(c *qt.C) {
-			styles := newXlsxStyleSheet(nil)
+			styles := newXLSXStyleSheet(nil)
 
-			fills := xlsxFills{}
-			pattern := xlsxPatternFill{
+			fills := XLSXFills{}
+			pattern := XLSXPatternFill{
 				PatternType: "fake",
-				FgColor:     xlsxColor{RGB: "00aaff"},
-				BgColor:     xlsxColor{RGB: "ffaa00"},
+				FgColor:     XLSXColor{RGB: "00aaff"},
+				BgColor:     XLSXColor{RGB: "ffaa00"},
 			}
-			fill := xlsxFill{
+			fill := XLSXFill{
 				PatternFill: pattern,
 			}
 			fills.addFill(fill)
 
 			styles.Fills = fills
 			style := &Style{}
-			xf := xlsxXf{
+			xf := XLSXXf{
 				ApplyFill: true,
 				FillId:    0,
 			}
@@ -561,9 +561,9 @@ func TestStyleSheet(t *testing.T) {
 
 		})
 		c.Run("Font", func(c *qt.C) {
-			styles := newXlsxStyleSheet(nil)
+			styles := newXLSXStyleSheet(nil)
 
-			fonts := xlsxFonts{}
+			fonts := XLSXFonts{}
 
 			sz := 10.0
 			szVal := strconv.FormatFloat(sz, 'f', -1, 64)
@@ -574,23 +574,23 @@ func TestStyleSheet(t *testing.T) {
 			charset := 10
 			charsetVal := strconv.Itoa(charset)
 
-			font := xlsxFont{
-				Sz:      xlsxVal{szVal},
-				Name:    xlsxVal{nameVal},
-				Family:  xlsxVal{familyVal},
-				Charset: xlsxVal{charsetVal},
-				Color:   xlsxColor{RGB: "00aaff"},
-				B:       &xlsxVal{"1"},
-				I:       &xlsxVal{"1"},
-				U:       &xlsxVal{"1"},
-				Strike:  &xlsxVal{"1"},
+			font := XLSXFont{
+				Sz:      XLSXVal{szVal},
+				Name:    XLSXVal{nameVal},
+				Family:  XLSXVal{familyVal},
+				Charset: XLSXVal{charsetVal},
+				Color:   XLSXColor{RGB: "00aaff"},
+				B:       &XLSXVal{"1"},
+				I:       &XLSXVal{"1"},
+				U:       &XLSXVal{"1"},
+				Strike:  &XLSXVal{"1"},
 			}
 
 			fonts.addFont(font)
 
 			styles.Fonts = fonts
 			style := &Style{}
-			xf := xlsxXf{
+			xf := XLSXXf{
 				ApplyFont: true,
 				FontId:    0,
 			}
@@ -608,10 +608,10 @@ func TestStyleSheet(t *testing.T) {
 		})
 
 		c.Run("Alignment", func(c *qt.C) {
-			styles := newXlsxStyleSheet(nil)
+			styles := newXLSXStyleSheet(nil)
 			style := &Style{}
 
-			alignment := xlsxAlignment{
+			alignment := XLSXAlignment{
 				Horizontal:   "left",
 				Indent:       10,
 				ShrinkToFit:  true,
@@ -619,7 +619,7 @@ func TestStyleSheet(t *testing.T) {
 				Vertical:     "top",
 				WrapText:     true,
 			}
-			xf := xlsxXf{
+			xf := XLSXXf{
 				ApplyAlignment: true,
 				Alignment:      alignment,
 			}

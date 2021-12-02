@@ -50,15 +50,15 @@ func NewStyle() *Style {
 }
 
 // Generate the underlying XLSX style elements that correspond to the Style.
-func (style *Style) makeXLSXStyleElements() (xFont xlsxFont, xFill xlsxFill, xBorder xlsxBorder, xCellXf xlsxXf) {
+func (style *Style) makeXLSXStyleElements() (xFont XLSXFont, xFill XLSXFill, xBorder XLSXBorder, xCellXf XLSXXf) {
 	if style == nil {
 		panic("Called makeXLSXStyleElements on a nil *Style!")
 	}
 
-	xFont = xlsxFont{}
-	xFill = xlsxFill{}
-	xBorder = xlsxBorder{}
-	xCellXf = xlsxXf{}
+	xFont = XLSXFont{}
+	xFill = XLSXFill{}
+	xBorder = XLSXBorder{}
+	xCellXf = XLSXXf{}
 	xFont.Sz.Val = strconv.FormatFloat(style.Font.Size, 'f', -1, 64)
 	xFont.Name.Val = style.Font.Name
 	xFont.Family.Val = strconv.Itoa(style.Font.Family)
@@ -66,45 +66,45 @@ func (style *Style) makeXLSXStyleElements() (xFont xlsxFont, xFill xlsxFill, xBo
 	xFont.Color.RGB = style.Font.Color
 
 	if style.Font.Bold {
-		xFont.B = &xlsxVal{}
+		xFont.B = &XLSXVal{}
 	} else {
 		xFont.B = nil
 	}
 	if style.Font.Italic {
-		xFont.I = &xlsxVal{}
+		xFont.I = &XLSXVal{}
 	} else {
 		xFont.I = nil
 	}
 	if style.Font.Underline {
-		xFont.U = &xlsxVal{}
+		xFont.U = &XLSXVal{}
 	} else {
 		xFont.U = nil
 	}
 	if style.Font.Strike {
-		xFont.Strike = &xlsxVal{}
+		xFont.Strike = &XLSXVal{}
 	} else {
 		xFont.Strike = nil
 	}
-	xPatternFill := xlsxPatternFill{}
+	xPatternFill := XLSXPatternFill{}
 	xPatternFill.PatternType = style.Fill.PatternType
 	xPatternFill.FgColor.RGB = style.Fill.FgColor
 	xPatternFill.BgColor.RGB = style.Fill.BgColor
 	xFill.PatternFill = xPatternFill
-	xBorder.Left = xlsxLine{
+	xBorder.Left = XLSXLine{
 		Style: style.Border.Left,
-		Color: xlsxColor{RGB: style.Border.LeftColor},
+		Color: XLSXColor{RGB: style.Border.LeftColor},
 	}
-	xBorder.Right = xlsxLine{
+	xBorder.Right = XLSXLine{
 		Style: style.Border.Right,
-		Color: xlsxColor{RGB: style.Border.RightColor},
+		Color: XLSXColor{RGB: style.Border.RightColor},
 	}
-	xBorder.Top = xlsxLine{
+	xBorder.Top = XLSXLine{
 		Style: style.Border.Top,
-		Color: xlsxColor{RGB: style.Border.TopColor},
+		Color: XLSXColor{RGB: style.Border.TopColor},
 	}
-	xBorder.Bottom = xlsxLine{
+	xBorder.Bottom = XLSXLine{
 		Style: style.Border.Bottom,
-		Color: xlsxColor{RGB: style.Border.BottomColor},
+		Color: XLSXColor{RGB: style.Border.BottomColor},
 	}
 	xCellXf = makeXLSXCellElement()
 	xCellXf.ApplyBorder = style.ApplyBorder
@@ -117,7 +117,7 @@ func (style *Style) makeXLSXStyleElements() (xFont xlsxFont, xFill xlsxFill, xBo
 	return
 }
 
-func makeXLSXCellElement() (xCellXf xlsxXf) {
+func makeXLSXCellElement() (xCellXf XLSXXf) {
 	xCellXf.NumFmtId = 0
 	return
 }

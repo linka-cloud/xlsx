@@ -17,76 +17,76 @@ const (
 
 // xmlxWorkbookRels contains xmlxWorkbookRelations
 // which maps sheet id and sheet XML
-type xlsxWorkbookRels struct {
+type XLSXWorkbookRels struct {
 	XMLName       xml.Name               `xml:"http://schemas.openxmlformats.org/package/2006/relationships Relationships"`
-	Relationships []xlsxWorkbookRelation `xml:"Relationship"`
+	Relationships []XLSXWorkbookRelation `xml:"Relationship"`
 }
 
 // xmlxWorkbookRelation maps sheet id and xl/worksheets/sheet%d.xml
-type xlsxWorkbookRelation struct {
+type XLSXWorkbookRelation struct {
 	Id     string `xml:",attr"`
 	Target string `xml:",attr"`
 	Type   string `xml:",attr"`
 }
 
-// xlsxWorkbook directly maps the workbook element from the namespace
+// XLSXWorkbook directly maps the workbook element from the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxWorkbook struct {
+type XLSXWorkbook struct {
 	XMLName            xml.Name               `xml:"http://schemas.openxmlformats.org/spreadsheetml/2006/main workbook"`
-	FileVersion        xlsxFileVersion        `xml:"fileVersion"`
-	WorkbookPr         xlsxWorkbookPr         `xml:"workbookPr"`
-	WorkbookProtection xlsxWorkbookProtection `xml:"workbookProtection"`
-	BookViews          xlsxBookViews          `xml:"bookViews"`
-	Sheets             xlsxSheets             `xml:"sheets"`
-	DefinedNames       xlsxDefinedNames       `xml:"definedNames"`
-	CalcPr             xlsxCalcPr             `xml:"calcPr"`
+	FileVersion        XLSXFileVersion        `xml:"fileVersion"`
+	WorkbookPr         XLSXWorkbookPr         `xml:"workbookPr"`
+	WorkbookProtection XLSXWorkbookProtection `xml:"workbookProtection"`
+	BookViews          XLSXBookViews          `xml:"bookViews"`
+	Sheets             XLSXSheets             `xml:"sheets"`
+	DefinedNames       XLSXDefinedNames       `xml:"definedNames"`
+	CalcPr             XLSXCalcPr             `xml:"calcPr"`
 }
 
-// xlsxWorkbookProtection directly maps the workbookProtection element from the
+// XLSXWorkbookProtection directly maps the workbookProtection element from the
 // namespace http://schemas.openxmlformats.org/spreadsheetml/2006/main
 // - currently I have not checked it for completeness - it does as
 // much as I need.
-type xlsxWorkbookProtection struct {
+type XLSXWorkbookProtection struct {
 	// We don't need this, yet.
 }
 
-// xlsxFileVersion directly maps the fileVersion element from the
+// XLSXFileVersion directly maps the fileVersion element from the
 // namespace http://schemas.openxmlformats.org/spreadsheetml/2006/main
 // - currently I have not checked it for completeness - it does as
 // much as I need.
-type xlsxFileVersion struct {
+type XLSXFileVersion struct {
 	AppName      string `xml:"appName,attr,omitempty"`
 	LastEdited   string `xml:"lastEdited,attr,omitempty"`
 	LowestEdited string `xml:"lowestEdited,attr,omitempty"`
 	RupBuild     string `xml:"rupBuild,attr,omitempty"`
 }
 
-// xlsxWorkbookPr directly maps the workbookPr element from the
+// XLSXWorkbookPr directly maps the workbookPr element from the
 // namespace http://schemas.openxmlformats.org/spreadsheetml/2006/main
 // - currently I have not checked it for completeness - it does as
 // much as I need.
-type xlsxWorkbookPr struct {
+type XLSXWorkbookPr struct {
 	DefaultThemeVersion string `xml:"defaultThemeVersion,attr,omitempty"`
 	BackupFile          bool   `xml:"backupFile,attr,omitempty"`
 	ShowObjects         string `xml:"showObjects,attr,omitempty"`
 	Date1904            bool   `xml:"date1904,attr"`
 }
 
-// xlsxBookViews directly maps the bookViews element from the
+// XLSXBookViews directly maps the bookViews element from the
 // namespace http://schemas.openxmlformats.org/spreadsheetml/2006/main
 // - currently I have not checked it for completeness - it does as
 // much as I need.
-type xlsxBookViews struct {
-	WorkBookView []xlsxWorkBookView `xml:"workbookView"`
+type XLSXBookViews struct {
+	WorkBookView []XLSXWorkBookView `xml:"workbookView"`
 }
 
-// xlsxWorkBookView directly maps the workbookView element from the
+// XLSXWorkBookView directly maps the workbookView element from the
 // namespace http://schemas.openxmlformats.org/spreadsheetml/2006/main
 // - currently I have not checked it for completeness - it does as
 // much as I need.
-type xlsxWorkBookView struct {
+type XLSXWorkBookView struct {
 	ActiveTab            int    `xml:"activeTab,attr,omitempty"`
 	FirstSheet           int    `xml:"firstSheet,attr,omitempty"`
 	ShowHorizontalScroll bool   `xml:"showHorizontalScroll,attr,omitempty"`
@@ -99,40 +99,40 @@ type xlsxWorkBookView struct {
 	YWindow              string `xml:"yWindow,attr,omitempty"`
 }
 
-// xlsxSheets directly maps the sheets element from the namespace
+// XLSXSheets directly maps the sheets element from the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxSheets struct {
-	Sheet []xlsxSheet `xml:"sheet"`
+type XLSXSheets struct {
+	Sheet []XLSXSheet `xml:"sheet"`
 }
 
-// xlsxSheet directly maps the sheet element from the namespace
+// XLSXSheet directly maps the sheet element from the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxSheet struct {
+type XLSXSheet struct {
 	Name    string `xml:"name,attr,omitempty"`
 	SheetId string `xml:"sheetId,attr,omitempty"`
 	Id      string `xml:"http://schemas.openxmlformats.org/officeDocument/2006/relationships id,attr,omitempty"`
 	State   string `xml:"state,attr,omitempty"`
 }
 
-// xlsxDefinedNames directly maps the definedNames element from the
+// XLSXDefinedNames directly maps the definedNames element from the
 // namespace http://schemas.openxmlformats.org/spreadsheetml/2006/main
 // - currently I have not checked it for completeness - it does as
 // much as I need.
-type xlsxDefinedNames struct {
-	DefinedName []xlsxDefinedName `xml:"definedName"`
+type XLSXDefinedNames struct {
+	DefinedName []XLSXDefinedName `xml:"definedName"`
 }
 
-// xlsxDefinedName directly maps the definedName element from the
+// XLSXDefinedName directly maps the definedName element from the
 // namespace http://schemas.openxmlformats.org/spreadsheetml/2006/main
 // - currently I have not checked it for completeness - it does as
 // much as I need.
 // for a descriptions of the attributes see
 // https://msdn.microsoft.com/en-us/library/office/documentformat.openxml.spreadsheet.definedname.aspx
-type xlsxDefinedName struct {
+type XLSXDefinedName struct {
 	Data              string `xml:",chardata"`
 	Name              string `xml:"name,attr"`
 	Comment           string `xml:"comment,attr,omitempty"`
@@ -151,11 +151,11 @@ type xlsxDefinedName struct {
 	Xlm               bool   `xml:"xml,attr,omitempty"`
 }
 
-// xlsxCalcPr directly maps the calcPr element from the namespace
+// XLSXCalcPr directly maps the calcPr element from the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxCalcPr struct {
+type XLSXCalcPr struct {
 	CalcId       string  `xml:"calcId,attr,omitempty"`
 	IterateCount int     `xml:"iterateCount,attr,omitempty"`
 	RefMode      string  `xml:"refMode,attr,omitempty"`
@@ -163,8 +163,8 @@ type xlsxCalcPr struct {
 	IterateDelta float64 `xml:"iterateDelta,attr,omitempty"`
 }
 
-// Helper function to lookup the file corresponding to a xlsxSheet object in the worksheets map
-func worksheetFileForSheet(sheet xlsxSheet, worksheets map[string]*zip.File, sheetXMLMap map[string]string) *zip.File {
+// Helper function to lookup the file corresponding to a XLSXSheet object in the worksheets map
+func worksheetFileForSheet(sheet XLSXSheet, worksheets map[string]*zip.File, sheetXMLMap map[string]string) *zip.File {
 	sheetName, ok := sheetXMLMap[sheet.Id]
 	if !ok {
 		if sheet.SheetId != "" {
@@ -177,19 +177,19 @@ func worksheetFileForSheet(sheet xlsxSheet, worksheets map[string]*zip.File, she
 }
 
 // getWorksheetFromSheet() is an internal helper function to open a
-// sheetN.xml file, referred to by an xlsx.xlsxSheet struct, from the XLSX
-// file and unmarshal it an xlsx.xlsxWorksheet struct
-func getWorksheetFromSheet(sheet xlsxSheet, worksheets map[string]*zip.File, sheetXMLMap map[string]string, rowLimit int, valueOnly bool) (*xlsxWorksheet, error) {
+// sheetN.xml file, referred to by an xlsx.XLSXSheet struct, from the XLSX
+// file and unmarshal it an xlsx.XLSXWorksheet struct
+func getWorksheetFromSheet(sheet XLSXSheet, worksheets map[string]*zip.File, sheetXMLMap map[string]string, rowLimit int, valueOnly bool) (*XLSXWorksheet, error) {
 	var r io.Reader
 	var decoder *xml.Decoder
-	var worksheet *xlsxWorksheet
+	var worksheet *XLSXWorksheet
 	var err error
 
-	wrap := func(err error) (*xlsxWorksheet, error) {
+	wrap := func(err error) (*XLSXWorksheet, error) {
 		return nil, fmt.Errorf("getWorksheetFromSheet: %w", err)
 	}
 
-	worksheet = new(xlsxWorksheet)
+	worksheet = new(XLSXWorksheet)
 
 	f := worksheetFileForSheet(sheet, worksheets, sheetXMLMap)
 	if f == nil {

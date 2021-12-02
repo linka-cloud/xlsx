@@ -62,7 +62,7 @@ const (
 )
 
 // NewDataValidation return data validation struct
-func NewDataValidation(startRow, startCol, endRow, endCol int, allowBlank bool) *xlsxDataValidation {
+func NewDataValidation(startRow, startCol, endRow, endCol int, allowBlank bool) *XLSXDataValidation {
 	startX := ColIndexToLetters(startCol)
 	startY := RowIndexToString(startRow)
 	endX := ColIndexToLetters(endCol)
@@ -72,14 +72,14 @@ func NewDataValidation(startRow, startCol, endRow, endCol int, allowBlank bool) 
 	if startX != endX || startY != endY {
 		sqref += ":" + endX + endY
 	}
-	return &xlsxDataValidation{
+	return &XLSXDataValidation{
 		AllowBlank: allowBlank,
 		Sqref:      sqref,
 	}
 }
 
 // SetError set error notice
-func (dd *xlsxDataValidation) SetError(style DataValidationErrorStyle, title, msg *string) {
+func (dd *XLSXDataValidation) SetError(style DataValidationErrorStyle, title, msg *string) {
 	dd.ShowErrorMessage = true
 	dd.Error = msg
 	dd.ErrorTitle = title
@@ -97,7 +97,7 @@ func (dd *xlsxDataValidation) SetError(style DataValidationErrorStyle, title, ms
 }
 
 // SetInput set prompt notice
-func (dd *xlsxDataValidation) SetInput(title, msg *string) {
+func (dd *XLSXDataValidation) SetInput(title, msg *string) {
 	dd.ShowInputMessage = true
 	dd.PromptTitle = title
 	dd.Prompt = msg
@@ -105,7 +105,7 @@ func (dd *xlsxDataValidation) SetInput(title, msg *string) {
 
 // SetDropList sets a hard coded list of values that the drop down will choose from.
 // List validations do not work in Apple Numbers.
-func (dd *xlsxDataValidation) SetDropList(keys []string) error {
+func (dd *XLSXDataValidation) SetDropList(keys []string) error {
 	formula := "\"" + strings.Join(keys, ",") + "\""
 	if dataValidationFormulaStrLen < len(formula) {
 		return fmt.Errorf(dataValidationFormulaStrLenErr)
@@ -121,7 +121,7 @@ func (dd *xlsxDataValidation) SetDropList(keys []string) error {
 // column will cause Google Sheets to spin indefinitely while trying to load the possible drop down
 // values (more than 5 minutes).
 // List validations do not work in Apple Numbers.
-func (dd *xlsxDataValidation) SetInFileList(sheet string, x1, y1, x2, y2 int) error {
+func (dd *XLSXDataValidation) SetInFileList(sheet string, x1, y1, x2, y2 int) error {
 	start := GetCellIDStringFromCoordsWithFixed(x1, y1, true, true)
 	if y2 < 0 {
 		y2 = Excel2006MaxRowIndex
@@ -138,7 +138,7 @@ func (dd *xlsxDataValidation) SetInFileList(sheet string, x1, y1, x2, y2 int) er
 }
 
 // SetDropList data validation range
-func (dd *xlsxDataValidation) SetRange(f1, f2 int, t DataValidationType, o DataValidationOperator) error {
+func (dd *XLSXDataValidation) SetRange(f1, f2 int, t DataValidationType, o DataValidationOperator) error {
 	formula1 := fmt.Sprintf("%d", f1)
 	formula2 := fmt.Sprintf("%d", f2)
 

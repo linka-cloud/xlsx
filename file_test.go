@@ -206,10 +206,10 @@ func TestFile(t *testing.T) {
 		var xlsxFile *File
 		var err error
 		var fontCount, fillCount, borderCount, cellStyleXfCount, cellXfCount int
-		var font xlsxFont
-		var fill xlsxFill
-		var border xlsxBorder
-		var xf xlsxXf
+		var font XLSXFont
+		var fill XLSXFill
+		var border XLSXBorder
+		var xf XLSXXf
 
 		xlsxFile, err = OpenFile("./testdocs/testfile.xlsx", option)
 		c.Assert(err, qt.IsNil)
@@ -241,7 +241,7 @@ func TestFile(t *testing.T) {
 		c.Assert(cellStyleXfCount, qt.Equals, 20)
 
 		xf = xlsxFile.styles.CellStyleXfs.Xf[0]
-		expectedXf := &xlsxXf{
+		expectedXf := &XLSXXf{
 			ApplyAlignment:  true,
 			ApplyBorder:     true,
 			ApplyFont:       true,
@@ -265,7 +265,7 @@ func TestFile(t *testing.T) {
 		c.Assert(cellXfCount, qt.Equals, 3)
 
 		xf = xlsxFile.styles.CellXfs.Xf[0]
-		expectedXf = &xlsxXf{
+		expectedXf = &XLSXXf{
 			ApplyAlignment:  false,
 			ApplyBorder:     false,
 			ApplyFont:       false,
@@ -423,13 +423,13 @@ func TestFile(t *testing.T) {
 		f.AddSheet("MyFirstSheet")
 		f.AddSheet("MySecondSheet")
 		workbook := f.makeWorkbook()
-		workbook.Sheets.Sheet[0] = xlsxSheet{
+		workbook.Sheets.Sheet[0] = XLSXSheet{
 			Name:    "MyFirstSheet",
 			SheetId: "1",
 			Id:      "rId1",
 			State:   "visible"}
 
-		workbook.Sheets.Sheet[1] = xlsxSheet{
+		workbook.Sheets.Sheet[1] = XLSXSheet{
 			Name:    "MySecondSheet",
 			SheetId: "2",
 			Id:      "rId2",
@@ -1077,7 +1077,7 @@ func TestHyperlinks(t *testing.T) {
 
 // Helper function used to test contents of a given xlsxXf against
 // expectations.
-func testXf(c *qt.C, result, expected *xlsxXf) {
+func testXf(c *qt.C, result, expected *XLSXXf) {
 	c.Assert(result.ApplyAlignment, qt.Equals, expected.ApplyAlignment)
 	c.Assert(result.ApplyBorder, qt.Equals, expected.ApplyBorder)
 	c.Assert(result.ApplyFont, qt.Equals, expected.ApplyFont)

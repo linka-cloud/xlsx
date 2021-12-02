@@ -70,7 +70,7 @@ type Cell struct {
 	HMerge         int
 	VMerge         int
 	cellType       CellType
-	DataValidation *xlsxDataValidation
+	DataValidation *XLSXDataValidation
 	Hyperlink      Hyperlink
 	num            int
 	modified       bool
@@ -547,7 +547,7 @@ func (c *Cell) FormattedValue() (string, error) {
 }
 
 // SetDataValidation set data validation
-func (c *Cell) SetDataValidation(dd *xlsxDataValidation) {
+func (c *Cell) SetDataValidation(dd *XLSXDataValidation) {
 	c.updatable()
 	c.DataValidation = dd
 	c.modified = true

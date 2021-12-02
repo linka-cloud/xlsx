@@ -9,7 +9,7 @@ type theme struct {
 	colors []string
 }
 
-func newTheme(themeXml xlsxTheme) *theme {
+func newTheme(themeXml XLSXTheme) *theme {
 	clrMap := map[string]string{}
 	clrSchemes := themeXml.ThemeElements.ClrScheme.Children
 	for _, scheme := range clrSchemes {

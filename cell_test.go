@@ -29,7 +29,7 @@ func TestCell(t *testing.T) {
 		c.Assert(cell.Modified(), qt.Equals, true)
 	})
 
-	// Test that GetStyle correctly converts the xlsxStyle.Fonts.
+	// Test that GetStyle correctly converts the XLSXStyle.Fonts.
 	c.Run("TestGetStyleWithFonts", func(c *qt.C) {
 		font := NewFont(10, "Calibra")
 		style := NewStyle()
@@ -43,7 +43,7 @@ func TestCell(t *testing.T) {
 		c.Assert(cell.Modified(), qt.Equals, false)
 	})
 
-	// Test that SetStyle correctly translates into a xlsxFont element
+	// Test that SetStyle correctly translates into a XLSXFont element
 	csRunO(c, "TestSetStyleWithFonts", func(c *qt.C, option FileOption) {
 		file := NewFile(option)
 		sheet, _ := file.AddSheet("Test")
@@ -60,7 +60,7 @@ func TestCell(t *testing.T) {
 		c.Assert(cell.Modified(), qt.Equals, true)
 	})
 
-	// Test that GetStyle correctly converts the xlsxStyle.Fills.
+	// Test that GetStyle correctly converts the XLSXStyle.Fills.
 	c.Run("TestGetStyleWithFills", func(c *qt.C) {
 		fill := *NewFill("solid", "FF000000", "00FF0000")
 		style := NewStyle()
@@ -74,7 +74,7 @@ func TestCell(t *testing.T) {
 		c.Assert(cell.Modified(), qt.Equals, false)
 	})
 
-	// Test that SetStyle correctly updates xlsxStyle.Fills.
+	// Test that SetStyle correctly updates XLSXStyle.Fills.
 	csRunO(c, "TestSetStyleWithFills", func(c *qt.C, option FileOption) {
 		file := NewFile(option)
 		sheet, _ := file.AddSheet("Test")
@@ -93,7 +93,7 @@ func TestCell(t *testing.T) {
 		c.Assert(cell.Modified(), qt.Equals, true)
 	})
 
-	// Test that GetStyle correctly converts the xlsxStyle.Borders.
+	// Test that GetStyle correctly converts the XLSXStyle.Borders.
 	c.Run("TestGetStyleWithBorders", func(c *qt.C) {
 		border := *NewBorder("thin", "thin", "thin", "thin")
 		style := NewStyle()

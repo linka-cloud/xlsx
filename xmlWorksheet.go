@@ -23,74 +23,74 @@ const (
 	RelationshipTargetModeExternal RelationshipTargetMode = "External"
 )
 
-// xlsxWorksheetRels contains xlsxWorksheetRelation
-type xlsxWorksheetRels struct {
+// XLSXWorksheetRels contains XLSXWorksheetRelation
+type XLSXWorksheetRels struct {
 	XMLName       xml.Name                `xml:"http://schemas.openxmlformats.org/package/2006/relationships Relationships"`
-	Relationships []xlsxWorksheetRelation `xml:"Relationship"`
+	Relationships []XLSXWorksheetRelation `xml:"Relationship"`
 }
 
-type xlsxWorksheetRelation struct {
+type XLSXWorksheetRelation struct {
 	Id         string                 `xml:"Id,attr"`
 	Type       RelationshipType       `xml:"Type,attr"`
 	Target     string                 `xml:"Target,attr"`
 	TargetMode RelationshipTargetMode `xml:"TargetMode,attr"`
 }
 
-// xlsxWorksheet directly maps the worksheet element in the namespace
+// XLSXWorksheet directly maps the worksheet element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxWorksheet struct {
+type XLSXWorksheet struct {
 	XMLName         xml.Name             `xml:"http://schemas.openxmlformats.org/spreadsheetml/2006/main worksheet"`
 	XMLNSR          string               `xml:"xmlns:r,attr"`
-	SheetPr         xlsxSheetPr          `xml:"sheetPr"`
-	Dimension       xlsxDimension        `xml:"dimension"`
-	SheetViews      xlsxSheetViews       `xml:"sheetViews"`
-	SheetFormatPr   xlsxSheetFormatPr    `xml:"sheetFormatPr"`
-	Cols            *xlsxCols            `xml:"cols,omitempty"`
-	SheetData       xlsxSheetData        `xml:"sheetData"`
-	Hyperlinks      *xlsxHyperlinks      `xml:"hyperlinks,omitempty"`
-	DataValidations *xlsxDataValidations `xml:"dataValidations"`
-	AutoFilter      *xlsxAutoFilter      `xml:"autoFilter,omitempty"`
-	MergeCells      *xlsxMergeCells      `xml:"mergeCells,omitempty"`
-	PrintOptions    *xlsxPrintOptions    `xml:"printOptions,omitempty"`
-	PageMargins     *xlsxPageMargins     `xml:"pageMargins,omitempty"`
-	PageSetUp       *xlsxPageSetUp       `xml:"pageSetup,omitempty"`
-	HeaderFooter    *xlsxHeaderFooter    `xml:"headerFooter,omitempty"`
+	SheetPr         XLSXSheetPr          `xml:"sheetPr"`
+	Dimension       XLSXDimension        `xml:"dimension"`
+	SheetViews      XLSXSheetViews       `xml:"sheetViews"`
+	SheetFormatPr   XLSXSheetFormatPr    `xml:"sheetFormatPr"`
+	Cols            *XLSXCols            `xml:"cols,omitempty"`
+	SheetData       XLSXSheetData        `xml:"sheetData"`
+	Hyperlinks      *XLSXHyperlinks      `xml:"hyperlinks,omitempty"`
+	DataValidations *XLSXDataValidations `xml:"dataValidations"`
+	AutoFilter      *XLSXAutoFilter      `xml:"autoFilter,omitempty"`
+	MergeCells      *XLSXMergeCells      `xml:"mergeCells,omitempty"`
+	PrintOptions    *XLSXPrintOptions    `xml:"printOptions,omitempty"`
+	PageMargins     *XLSXPageMargins     `xml:"pageMargins,omitempty"`
+	PageSetUp       *XLSXPageSetUp       `xml:"pageSetup,omitempty"`
+	HeaderFooter    *XLSXHeaderFooter    `xml:"headerFooter,omitempty"`
 }
 
-// xlsxHeaderFooter directly maps the headerFooter element in the namespace
+// XLSXHeaderFooter directly maps the headerFooter element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxHeaderFooter struct {
+type XLSXHeaderFooter struct {
 	DifferentFirst   *bool           `xml:"differentFirst,attr,omitempty"`
 	DifferentOddEven *bool           `xml:"differentOddEven,attr,omitempty"`
-	OddHeader        []xlsxOddHeader `xml:"oddHeader"`
-	OddFooter        []xlsxOddFooter `xml:"oddFooter"`
+	OddHeader        []XLSXOddHeader `xml:"oddHeader"`
+	OddFooter        []XLSXOddFooter `xml:"oddFooter"`
 }
 
-// xlsxOddHeader directly maps the oddHeader element in the namespace
+// XLSXOddHeader directly maps the oddHeader element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxOddHeader struct {
+type XLSXOddHeader struct {
 	Content string `xml:",chardata"`
 }
 
-// xlsxOddFooter directly maps the oddFooter element in the namespace
+// XLSXOddFooter directly maps the oddFooter element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxOddFooter struct {
+type XLSXOddFooter struct {
 	Content string `xml:",chardata"`
 }
 
-// xlsxPageSetUp directly maps the pageSetup element in the namespace
+// XLSXPageSetUp directly maps the pageSetup element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxPageSetUp struct {
+type XLSXPageSetUp struct {
 	PaperSize          string  `xml:"paperSize,attr"`
 	Scale              int     `xml:"scale,attr"`
 	FirstPageNumber    int     `xml:"firstPageNumber,attr"`
@@ -108,11 +108,11 @@ type xlsxPageSetUp struct {
 	Copies             int     `xml:"copies,attr"`
 }
 
-// xlsxPrintOptions directly maps the printOptions element in the namespace
+// XLSXPrintOptions directly maps the printOptions element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxPrintOptions struct {
+type XLSXPrintOptions struct {
 	Headings           bool `xml:"headings,attr"`
 	GridLines          bool `xml:"gridLines,attr"`
 	GridLinesSet       bool `xml:"gridLinesSet,attr"`
@@ -120,11 +120,11 @@ type xlsxPrintOptions struct {
 	VerticalCentered   bool `xml:"verticalCentered,attr"`
 }
 
-// xlsxPageMargins directly maps the pageMargins element in the namespace
+// XLSXPageMargins directly maps the pageMargins element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxPageMargins struct {
+type XLSXPageMargins struct {
 	Left   float64 `xml:"left,attr"`
 	Right  float64 `xml:"right,attr"`
 	Top    float64 `xml:"top,attr"`
@@ -133,30 +133,30 @@ type xlsxPageMargins struct {
 	Footer float64 `xml:"footer,attr"`
 }
 
-// xlsxSheetFormatPr directly maps the sheetFormatPr element in the namespace
+// XLSXSheetFormatPr directly maps the sheetFormatPr element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxSheetFormatPr struct {
+type XLSXSheetFormatPr struct {
 	DefaultColWidth  float64 `xml:"defaultColWidth,attr,omitempty"`
 	DefaultRowHeight float64 `xml:"defaultRowHeight,attr"`
 	OutlineLevelCol  uint8   `xml:"outlineLevelCol,attr,omitempty"`
 	OutlineLevelRow  uint8   `xml:"outlineLevelRow,attr,omitempty"`
 }
 
-// xlsxSheetViews directly maps the sheetViews element in the namespace
+// XLSXSheetViews directly maps the sheetViews element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxSheetViews struct {
-	SheetView []xlsxSheetView `xml:"sheetView"`
+type XLSXSheetViews struct {
+	SheetView []XLSXSheetView `xml:"sheetView"`
 }
 
-// xlsxSheetView directly maps the sheetView element in the namespace
+// XLSXSheetView directly maps the sheetView element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxSheetView struct {
+type XLSXSheetView struct {
 	WindowProtection        bool            `xml:"windowProtection,attr"`
 	ShowFormulas            bool            `xml:"showFormulas,attr"`
 	ShowGridLines           bool            `xml:"showGridLines,attr"`
@@ -173,26 +173,26 @@ type xlsxSheetView struct {
 	ZoomScaleNormal         float64         `xml:"zoomScaleNormal,attr"`
 	ZoomScalePageLayoutView float64         `xml:"zoomScalePageLayoutView,attr"`
 	WorkbookViewId          int             `xml:"workbookViewId,attr"`
-	Pane                    *xlsxPane       `xml:"pane"`
-	Selection               []xlsxSelection `xml:"selection"`
+	Pane                    *XLSXPane       `xml:"pane"`
+	Selection               []XLSXSelection `xml:"selection"`
 }
 
-// xlsxSelection directly maps the selection element in the namespace
+// XLSXSelection directly maps the selection element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxSelection struct {
+type XLSXSelection struct {
 	Pane         string `xml:"pane,attr"`
 	ActiveCell   string `xml:"activeCell,attr"`
 	ActiveCellId int    `xml:"activeCellId,attr"`
 	SQRef        string `xml:"sqref,attr"`
 }
 
-// xlsxSelection directly maps the selection element in the namespace
+// XLSXSelection directly maps the selection element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxPane struct {
+type XLSXPane struct {
 	XSplit      float64 `xml:"xSplit,attr"`
 	YSplit      float64 `xml:"ySplit,attr"`
 	TopLeftCell string  `xml:"topLeftCell,attr"`
@@ -200,36 +200,36 @@ type xlsxPane struct {
 	State       string  `xml:"state,attr"` // Either "split" or "frozen"
 }
 
-// xlsxSheetPr directly maps the sheetPr element in the namespace
+// XLSXSheetPr directly maps the sheetPr element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxSheetPr struct {
+type XLSXSheetPr struct {
 	FilterMode  bool              `xml:"filterMode,attr"`
-	PageSetUpPr []xlsxPageSetUpPr `xml:"pageSetUpPr"`
+	PageSetUpPr []XLSXPageSetUpPr `xml:"pageSetUpPr"`
 }
 
-// xlsxPageSetUpPr directly maps the pageSetupPr element in the namespace
+// XLSXPageSetUpPr directly maps the pageSetupPr element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxPageSetUpPr struct {
+type XLSXPageSetUpPr struct {
 	FitToPage bool `xml:"fitToPage,attr"`
 }
 
-// xlsxCols directly maps the cols element in the namespace
+// XLSXCols directly maps the cols element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxCols struct {
-	Col []xlsxCol `xml:"col"`
+type XLSXCols struct {
+	Col []XLSXCol `xml:"col"`
 }
 
-// xlsxCol directly maps the col element in the namespace
+// XLSXCol directly maps the col element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxCol struct {
+type XLSXCol struct {
 	Collapsed    *bool    `xml:"collapsed,attr,omitempty"`
 	Hidden       *bool    `xml:"hidden,attr,omitempty"`
 	Max          int      `xml:"max,attr"`
@@ -242,33 +242,33 @@ type xlsxCol struct {
 	Phonetic     *bool    `xml:"phonetic,attr,omitempty"`
 }
 
-// xlsxDimension directly maps the dimension element in the namespace
+// XLSXDimension directly maps the dimension element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxDimension struct {
+type XLSXDimension struct {
 	Ref string `xml:"ref,attr"`
 }
 
-// xlsxSheetData directly maps the sheetData element in the namespace
+// XLSXSheetData directly maps the sheetData element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxSheetData struct {
+type XLSXSheetData struct {
 	XMLName xml.Name  `xml:"sheetData"`
-	Row     []xlsxRow `xml:"row"`
+	Row     []XLSXRow `xml:"row"`
 }
 
-// xlsxDataValidations  excel cell data validation
-type xlsxDataValidations struct {
-	DataValidation []*xlsxDataValidation `xml:"dataValidation"`
+// XLSXDataValidations  excel cell data validation
+type XLSXDataValidations struct {
+	DataValidation []*XLSXDataValidation `xml:"dataValidation"`
 	Count          int                   `xml:"count,attr"`
 }
 
-// xlsxDataValidation
+// XLSXDataValidation
 // A single item of data validation defined on a range of the worksheet.
 // The list validation type would more commonly be called "a drop down box."
-type xlsxDataValidation struct {
+type XLSXDataValidation struct {
 	// A boolean value indicating whether the data validation allows the use of empty or blank
 	//entries. 1 means empty entries are OK and do not violate the validation constraints.
 	AllowBlank bool `xml:"allowBlank,attr,omitempty"`
@@ -309,48 +309,48 @@ type xlsxDataValidation struct {
 	Formula2 string `xml:"formula2,omitempty"`
 }
 
-// xlsxRow directly maps the row element in the namespace
+// XLSXRow directly maps the row element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxRow struct {
+type XLSXRow struct {
 	R            int     `xml:"r,attr"`
 	Spans        string  `xml:"spans,attr,omitempty"`
 	Hidden       bool    `xml:"hidden,attr,omitempty"`
-	C            []xlsxC `xml:"c"`
+	C            []XLSXC `xml:"c"`
 	Ht           string  `xml:"ht,attr,omitempty"`
 	CustomHeight bool    `xml:"customHeight,attr,omitempty"`
 	OutlineLevel uint8   `xml:"outlineLevel,attr,omitempty"`
 }
 
-type xlsxAutoFilter struct {
+type XLSXAutoFilter struct {
 	Ref string `xml:"ref,attr"`
 }
 
-type xlsxMergeCell struct {
+type XLSXMergeCell struct {
 	Ref string `xml:"ref,attr"` // ref: horiz "A1:C1", vert "B3:B6", both  "D3:G4"
 }
 
-type xlsxMergeCells struct {
+type XLSXMergeCells struct {
 	XMLName  xml.Name                 // `xml:"mergeCells,omitempty"`
 	Count    int                      `xml:"count,attr,omitempty"`
-	Cells    []xlsxMergeCell          `xml:"mergeCell,omitempty"`
-	CellsMap map[string]xlsxMergeCell `xml:"-"`
+	Cells    []XLSXMergeCell          `xml:"mergeCell,omitempty"`
+	CellsMap map[string]XLSXMergeCell `xml:"-"`
 }
 
-func (mc *xlsxMergeCells) addCell(cell xlsxMergeCell) {
+func (mc *XLSXMergeCells) addCell(cell XLSXMergeCell) {
 	if mc.CellsMap == nil {
-		mc.CellsMap = make(map[string]xlsxMergeCell)
+		mc.CellsMap = make(map[string]XLSXMergeCell)
 	}
 	cellRefs := strings.Split(cell.Ref, ":")
 	mc.CellsMap[cellRefs[0]] = cell
 }
 
-type xlsxHyperlinks struct {
-	HyperLinks []xlsxHyperlink `xml:"hyperlink"`
+type XLSXHyperlinks struct {
+	HyperLinks []XLSXHyperlink `xml:"hyperlink"`
 }
 
-type xlsxHyperlink struct {
+type XLSXHyperlink struct {
 	RelationshipId string `xml:"id,attr"`
 	Reference      string `xml:"ref,attr"`
 	DisplayString  string `xml:"display,attr,omitempty"`
@@ -360,7 +360,7 @@ type xlsxHyperlink struct {
 
 // Return the cartesian extent of a merged cell range from its origin
 // cell (the closest merged cell to the to left of the sheet.
-func (mc *xlsxMergeCells) getExtent(cellRef string) (int, int, error) {
+func (mc *XLSXMergeCells) getExtent(cellRef string) (int, int, error) {
 	wrap := func(err error) (int, int, error) {
 		return -1, -1, fmt.Errorf("getExtent: %w", err)
 	}
@@ -383,25 +383,25 @@ func (mc *xlsxMergeCells) getExtent(cellRef string) (int, int, error) {
 	return 0, 0, nil
 }
 
-// xlsxC directly maps the c element in the namespace
+// XLSXC directly maps the c element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxC struct {
+type XLSXC struct {
 	XMLName xml.Name
 	R       string  `xml:"r,attr"`           // Cell ID, e.g. A1
 	S       int     `xml:"s,attr,omitempty"` // Style reference.
 	T       string  `xml:"t,attr,omitempty"` // Type.
-	F       *xlsxF  `xml:"f,omitempty"`      // Formula
+	F       *XLSXF  `xml:"f,omitempty"`      // Formula
 	V       string  `xml:"v,omitempty"`      // Value
-	Is      *xlsxSI `xml:"is,omitempty"`     // Inline String.
+	Is      *XLSXSI `xml:"is,omitempty"`     // Inline String.
 }
 
-// xlsxF directly maps the f element in the namespace
+// XLSXF directly maps the f element in the namespace
 // http://schemas.openxmlformats.org/spreadsheetml/2006/main -
 // currently I have not checked it for completeness - it does as much
 // as I need.
-type xlsxF struct {
+type XLSXF struct {
 	Content string `xml:",chardata"`
 	T       string `xml:"t,attr,omitempty"`   // Formula type
 	Ref     string `xml:"ref,attr,omitempty"` // Shared formula ref
@@ -410,18 +410,18 @@ type xlsxF struct {
 
 // Create a new XLSX Worksheet with default values populated.
 // Strictly for internal use only!
-func newXlsxWorksheet() (worksheet *xlsxWorksheet) {
-	worksheet = &xlsxWorksheet{}
+func newXlsxWorksheet() (worksheet *XLSXWorksheet) {
+	worksheet = &XLSXWorksheet{}
 	worksheet.XMLNSR = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 	worksheet.SheetPr.FilterMode = false
-	worksheet.SheetPr.PageSetUpPr = make([]xlsxPageSetUpPr, 1)
-	worksheet.SheetPr.PageSetUpPr[0] = xlsxPageSetUpPr{FitToPage: false}
-	worksheet.SheetViews.SheetView = make([]xlsxSheetView, 1)
-	worksheet.SheetViews.SheetView[0] = xlsxSheetView{
+	worksheet.SheetPr.PageSetUpPr = make([]XLSXPageSetUpPr, 1)
+	worksheet.SheetPr.PageSetUpPr[0] = XLSXPageSetUpPr{FitToPage: false}
+	worksheet.SheetViews.SheetView = make([]XLSXSheetView, 1)
+	worksheet.SheetViews.SheetView[0] = XLSXSheetView{
 		ColorId:                 64,
 		DefaultGridColor:        true,
 		RightToLeft:             false,
-		Selection:               make([]xlsxSelection, 1),
+		Selection:               make([]XLSXSelection, 1),
 		ShowFormulas:            false,
 		ShowGridLines:           true,
 		ShowOutlineSymbols:      true,
@@ -435,7 +435,7 @@ func newXlsxWorksheet() (worksheet *xlsxWorksheet) {
 		ZoomScale:               100,
 		ZoomScaleNormal:         100,
 		ZoomScalePageLayoutView: 100}
-	worksheet.SheetViews.SheetView[0].Selection[0] = xlsxSelection{
+	worksheet.SheetViews.SheetView[0].Selection[0] = XLSXSelection{
 		Pane:         "topLeft",
 		ActiveCell:   "A1",
 		ActiveCellId: 0,
@@ -446,7 +446,7 @@ func newXlsxWorksheet() (worksheet *xlsxWorksheet) {
 }
 
 // setup the CellsMap so that we can rapidly calculate extents
-func (worksheet *xlsxWorksheet) mapMergeCells() {
+func (worksheet *XLSXWorksheet) mapMergeCells() {
 
 	if worksheet.MergeCells != nil {
 		for _, cell := range worksheet.MergeCells.Cells {
@@ -644,8 +644,8 @@ func emitStructAsXML(v reflect.Value, name, xmlNS string) (xmlwriter.Elem, error
 
 }
 
-func (worksheet *xlsxWorksheet) makeXlsxRowFromRow(row *Row, styles *xlsxStyleSheet, refTable *RefTable) (*xlsxRow, error) {
-	xRow := &xlsxRow{}
+func (worksheet *XLSXWorksheet) makeXlsxRowFromRow(row *Row, styles *XLSXStyleSheet, refTable *RefTable) (*XLSXRow, error) {
+	xRow := &XLSXRow{}
 	xRow.R = row.num + 1
 	if row.customHeight {
 		xRow.CustomHeight = true
@@ -675,12 +675,12 @@ func (worksheet *xlsxWorksheet) makeXlsxRowFromRow(row *Row, styles *xlsxStyleSh
 		case !compareFormatString(col.numFmt, cell.NumFmt):
 			XfId = handleNumFmtIdForXLSX(xNumFmt.NumFmtId, styles)
 		}
-		xC := xlsxC{
+		xC := XLSXC{
 			S: XfId,
 			R: GetCellIDStringFromCoords(cell.num, row.num),
 		}
 		if cell.formula != "" {
-			xC.F = &xlsxF{Content: cell.formula}
+			xC.F = &XLSXF{Content: cell.formula}
 		}
 		switch cell.cellType {
 		case CellTypeInline:
@@ -722,7 +722,7 @@ func (worksheet *xlsxWorksheet) makeXlsxRowFromRow(row *Row, styles *xlsxStyleSh
 	return xRow, err
 }
 
-func (worksheet *xlsxWorksheet) WriteXML(xw *xmlwriter.Writer, s *Sheet, styles *xlsxStyleSheet, refTable *RefTable) (err error) {
+func (worksheet *XLSXWorksheet) WriteXML(xw *xmlwriter.Writer, s *Sheet, styles *XLSXStyleSheet, refTable *RefTable) (err error) {
 	var output xmlwriter.Elem
 	worksheet.XMLNSR = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 	elem := reflect.ValueOf(worksheet)

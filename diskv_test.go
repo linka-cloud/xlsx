@@ -99,7 +99,7 @@ func TestDiskVCellStore(t *testing.T) {
 			ApplyAlignment: true,
 		}
 
-		dv := &xlsxDataValidation{
+		dv := &XLSXDataValidation{
 			AllowBlank:       true,
 			ShowInputMessage: true,
 			ShowErrorMessage: true,
@@ -409,7 +409,7 @@ line!`)
 	c.Run("Write and Read DataValidation", func(c *qt.C) {
 		buf := bytes.NewBufferString("")
 
-		dv := &xlsxDataValidation{
+		dv := &XLSXDataValidation{
 			AllowBlank:       true,
 			ShowInputMessage: true,
 			ShowErrorMessage: true,
@@ -577,7 +577,7 @@ line!`)
 	c.Run("Write and Read Cell with DataValidation", func(c *qt.C) {
 		buf := bytes.NewBufferString("")
 
-		dv := &xlsxDataValidation{
+		dv := &XLSXDataValidation{
 			AllowBlank:       true,
 			ShowInputMessage: true,
 			ShowErrorMessage: true,
@@ -692,7 +692,7 @@ line!`)
 		buf := bytes.NewBufferString("")
 
 		c1 := RichTextColor{
-			coreColor: xlsxColor{
+			coreColor: XLSXColor{
 				RGB:  "01234567",
 				Tint: -0.3,
 			},
@@ -718,7 +718,7 @@ line!`)
 		indexed := 7
 
 		c1 := RichTextColor{
-			coreColor: xlsxColor{
+			coreColor: XLSXColor{
 				Indexed: &indexed,
 				Tint:    0.4,
 			},
@@ -744,7 +744,7 @@ line!`)
 		theme := 8
 
 		c1 := RichTextColor{
-			coreColor: xlsxColor{
+			coreColor: XLSXColor{
 				Theme: &theme,
 			},
 		}
@@ -771,7 +771,7 @@ line!`)
 			Size:      12.5,
 			Family:    RichTextFontFamilyScript,
 			Charset:   RichTextCharsetGreek,
-			Color:     &RichTextColor{coreColor: xlsxColor{RGB: "12345678"}},
+			Color:     &RichTextColor{coreColor: XLSXColor{RGB: "12345678"}},
 			Bold:      true,
 			Italic:    false,
 			Strike:    false,

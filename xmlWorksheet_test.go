@@ -14,7 +14,7 @@ type WorksheetSuite struct{}
 var _ = Suite(&WorksheetSuite{})
 
 // Test we can succesfully unmarshal the sheetN.xml files within and
-// XLSX file into an xlsxWorksheet struct (and it's related children).
+// XLSX file into an XLSXWorksheet struct (and it's related children).
 func (w *WorksheetSuite) TestUnmarshallWorksheet(c *C) {
 	var sheetxml = bytes.NewBufferString(
 		`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -130,7 +130,7 @@ func (w *WorksheetSuite) TestUnmarshallWorksheet(c *C) {
             </oddFooter>
           </headerFooter>
         </worksheet>`)
-	worksheet := new(xlsxWorksheet)
+	worksheet := new(XLSXWorksheet)
 	err := xml.NewDecoder(sheetxml).Decode(worksheet)
 	c.Assert(err, IsNil)
 	c.Assert(worksheet.Dimension.Ref, Equals, "A1:B2")
@@ -181,7 +181,7 @@ func (w *WorksheetSuite) TestUnmarshallWorksheetWithMergeCells(c *C) {
   <drawing r:id="rId1"/>
 </worksheet>
 `)
-	worksheet := new(xlsxWorksheet)
+	worksheet := new(XLSXWorksheet)
 	err := xml.NewDecoder(sheetxml).Decode(worksheet)
 	c.Assert(err, IsNil)
 	c.Assert(worksheet.MergeCells, NotNil)
@@ -194,12 +194,12 @@ func (w *WorksheetSuite) TestUnmarshallWorksheetWithMergeCells(c *C) {
 // a merge that begins at a given reference.
 func TestMergeCellsGetExtent(t *testing.T) {
 	c := qt.New(t)
-	mc := xlsxMergeCells{Count: 2}
-	mc.Cells = make([]xlsxMergeCell, 2)
-	cell1 := xlsxMergeCell{Ref: "A11:A12"}
+	mc := XLSXMergeCells{Count: 2}
+	mc.Cells = make([]XLSXMergeCell, 2)
+	cell1 := XLSXMergeCell{Ref: "A11:A12"}
 	mc.Cells[0] = cell1
 	mc.addCell(cell1)
-	cell2 := xlsxMergeCell{Ref: "A1:C5"}
+	cell2 := XLSXMergeCell{Ref: "A1:C5"}
 	mc.Cells[1] = cell2
 	mc.addCell(cell2)
 	h, v, err := mc.getExtent("A1")
